@@ -2,21 +2,50 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
+    <meta charset="UTF-8">
+    <title>VEX Benchmark Dashboard</title>
+    <link rel="shortcut icon" href="/static/img/favicon.ico"/>
+    <link rel="bookmark" href="/static/img/favicon.ico"/>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap-editable.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/jquery/jquery.Jcrop.min.css">
 
-This is main panel of VBD 
-<p />
+    <script src="/static/jquery/jquery-2.1.3.min.js"></script>
+    <script src="/static/jquery/jquery.cookie.js"></script>
+    <script src="/static/jquery/jquery.form.js"></script>
+    <script src="/static/jquery/jquery.Jcrop.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/bootstrap/js/bootbox.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap-editable.min.js"></script>
+    
+    <script type="text/javascript" src="/static/armchart/amcharts.js"></script>
+	<script type="text/javascript" src="/static/armchart/serial.js"></script>
+	
+	<script type="text/javascript" src="/static/vex/vex.js"></script>
+    
+    <!-- header中新增js文件 -->
+    {% block header %} 
+		
+	{% endblock%}
+
+	<!-- header中新增css文件 -->
+    {% block css%}
+    
+    {% endblock%}
+</head>
+
+<body id="vbdContent">
+<!-- 占位符: 让出bootstrap的导航条的位置 -->
+<p>&nbsp</p><p>&nbsp</p>
 
 <!-- main part -->
-{% block content %} 
-    content will be replaced
-{% endblock %}
+<div id="vbd-content" class="container">
+	<h1>This in main vbd content panel -  deleted in future</h1>
+    {% block content %}This in main vbd content panel{% endblock %}
+</div>
 <!-- /.main -->
-
 </body>
+
+{% block js%}{% endblock%}
+{% include "include/footer.html"%}
 </html>
