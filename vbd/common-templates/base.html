@@ -33,19 +33,26 @@
     
     {% endblock%}
 </head>
+<!-- 导航条 -->
+{% include "include/nav.html"%}
 
-<body id="vbdContent">
+<body id="vbd_body">
 <!-- 占位符: 让出bootstrap的导航条的位置 -->
 <p>&nbsp</p><p>&nbsp</p>
 
 <!-- main part -->
-<div id="vbd-content" class="container">
+<div id="vbd_content" class="container">
 	<h1>This in main vbd content panel -  deleted in future</h1>
     {% block content %}This in main vbd content panel{% endblock %}
 </div>
 <!-- /.main -->
 </body>
 
+<script type="text/javascript">
+    $('#{{active_menu}}').addClass("active");
+</script>
 {% block js%}{% endblock%}
-{% include "include/footer.html"%}
+
+<!-- 页脚 -->
+<!--{% include "include/footer.html"%} -->
 </html>
