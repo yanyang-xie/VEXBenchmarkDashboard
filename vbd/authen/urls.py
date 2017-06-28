@@ -4,10 +4,12 @@ Created on Jun 28, 2017
 @author: xieyanyang
 '''
 
-from django.conf.urls import include, url
-from django.contrib import admin
+from django.conf.urls import url
+from authen import views
 
 urlpatterns = [
-    # Examples:
-    # url(r'^$', 'vbd.views.home', name='home'),
+    url(r'^signup/$', views.signup, name='signup'),
+    url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^set_password/$', views.set_password, name='set_password'),
 ]

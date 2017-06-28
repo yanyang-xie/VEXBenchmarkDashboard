@@ -1,48 +1,116 @@
 <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-			</button>
-			<ul class="nav navbar-nav navbar-brand navbar-left">
-			    <li>
-		            <img src="/static/img/comcast_logo.jpg" width="40" height="25"></img>VEX Benchmark Dashboard
-		        </li>
-		    </ul>
-		</div>
-		<div class="collapse navbar-collapse">
-			<ul class="nav navbar-nav">
-				<li id='env_operation'>
-					<a href="{% url 'env_operation' %}">&nbsp&nbsp<span class="glyphicon glyphicon-cloud">Environment&nbsp</span></a>
-				</li>
-				<li id='benchmark_operation'>
-					<a href="{% url 'benchmark_operation' %}">&nbsp&nbsp<span class="glyphicon glyphicon-briefcase">Operation&nbsp</span></a>
-				</li>
-				<li class="dropdown" id='benchmark_result'>
-		            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-		            	&nbsp&nbsp
-		            	<span class="glyphicon glyphicon-stats">Result</span><span class="caret"></span>
-		            	&nbsp
-		            </a>
-		            <ul class="dropdown-menu">
-			            <li>
-			            	<a href="{% url 'benchmark_result' 'VOD_T6' %}"><span class="text-muted text-center">&nbsp&nbspT6VOD</span></a>
-			            </li>
-			            <li role="separator" class="divider"></li>
-			            <li>
-			            	<a href="{% url 'benchmark_result' 'LINEAR_T6'%}"><span class="text-muted text-center">&nbsp&nbspT6Linear</span></a>
-			            </li>
-			            <li role="separator" class="divider"></li>
-			            <li>
-			            	<a href="{% url 'benchmark_result' 'CDVR_T6'%}"><span class="text-muted text-center">&nbsp&nbspT6cDVR</span></a>
-			            </li>
-		            </ul>
-		        </li>
-		        <li id='env_settings'>
-					<a href="{% url 'env_settings' %}">&nbsp&nbsp<span class="glyphicon glyphicon-briefcase">Settings&nbsp</span></a>
-				</li>
-			</ul>
-		</div>
-	</div>
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">
+                    Toggle navigation
+                </span>
+                <span class="icon-bar">
+                </span>
+            </button>
+            <ul class="nav navbar-nav navbar-brand navbar-left">
+                <li>
+                    <img src="/static/img/comcast_logo.jpg" width="40" height="25" />
+                    <small>
+                        Benchmark Dashboard
+                    </small>
+                </li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li id='env_operation'>
+                    <a href="{% url 'env_operation' %}">
+                        <span class="glyphicon glyphicon-cloud">
+                            Environment
+                        </span>
+                    </a>
+                </li>
+                <li id='benchmark_operation'>
+                    <a href="{% url 'benchmark_operation' %}">
+                        <span class="glyphicon glyphicon-briefcase">
+                            Operation
+                        </span>
+                    </a>
+                </li>
+                <li class="dropdown" id='benchmark_result'>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                    aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-stats">
+                            Result
+                        </span>
+                        <span class="caret">
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{% url 'benchmark_result' 'VOD_T6' %}">
+                                <span class="text-muted text-center">
+                                    T6VOD
+                                </span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider">
+                        </li>
+                        <li>
+                            <a href="{% url 'benchmark_result' 'LINEAR_T6'%}">
+                                <span class="text-muted text-center">
+                                    T6Linear
+                                </span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider">
+                        </li>
+                        <li>
+                            <a href="{% url 'benchmark_result' 'CDVR_T6'%}">
+                                <span class="text-muted text-center">
+                                    T6cDVR
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li id='env_settings'>
+                    <a href="{% url 'env_settings' %}">
+                        <span class="glyphicon glyphicon-briefcase">
+                            Settings
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user %}
+                <li>
+                    <p class="navbar-text">
+                        Welcome&nbsp;&nbsp;
+                        <span id="base_name">
+                            {{ user.myuser.nickname }}
+                        </span>
+                    </p>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        Logout
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'set_password' %}">
+                        ChangePasswd
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'signup' %}">
+                        Signup
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
 </div>
