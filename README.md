@@ -1,2 +1,2 @@
-# VEXPerfDashboard
-Dashboard of VEX Performance test
+# VEX Benchmark Dashboard
+Dashboard of VEX benchmark test
