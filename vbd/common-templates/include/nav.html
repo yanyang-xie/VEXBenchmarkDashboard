@@ -80,33 +80,37 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if user %}
-                <li>
-                    <p class="navbar-text">
-                        Welcome&nbsp;&nbsp;
-                        <span id="base_name">
-                            {{ user.myuser.nickname }}
+                <li class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                    aria-haspopup="true" aria-expanded="false">
+                        {{ user.myuser.nickname }}
+                        <span class="caret">
                         </span>
-                    </p>
-                </li>
-                <li>
-                    <a href="{% url 'logout' %}">
-                        Logout
                     </a>
-                </li>
-                <li>
-                    <a href="{% url 'set_password' %}">
-                        ChangePasswd
-                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li>
+                            <a href="{% url 'set_password' %}">
+                                ChangePasswd
+                            </a>
+                        </li>
+                        <li role="separator" class="divider">
+                        </li>
+                        <li>
+                            <a href="{% url 'logout' %}">
+                                logout
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 {% else %}
                 <li>
-                    <a href="{% url 'signup' %}">
-                        Signup
+                    <a href="{% url 'login' %}">
+                        Login
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'login' %}">
-                        Login
+                    <a href="{% url 'signup' %}">
+                        Signup
                     </a>
                 </li>
                 {% endif %}
