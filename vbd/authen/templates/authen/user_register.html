@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-7 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Register</h3></div>
+                <div class="panel-body">
+                    <form method="POST" class="form-horizontal" role="form">{% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_{{form.emial.name}}" class="col-md-3 control-label">{{form.email.label}}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="id_{{form.email.name}}" required name="{{form.email.name}}" value="{{form.data.email}}" autofocus />
+                                <p class="help-block">{% if form.errors.email %} {{form.errors.email}} {% else %} {{form.email.help_text}} {% endif %}</p></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_{{form.username.name}}" class="col-md-3 control-label">{{form.username.label}}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="id_{{form.username.name}}" required name="{{form.username.name}}" value="{{form.data.username}}" autofocus>
+                                <p class="help-block">{% if form.errors.username %} {{form.errors.username}} {% else %} {{form.username.help_text}} {% endif %}</p></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_{{form.nickname.name}}" class="col-md-3 control-label">{{form.nickname.label}}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="id_{{form.nickname.name}}" required name="{{form.nickname.name}}" value="{{form.data.nickname}}" autofocus>
+                                <p class="help-block">{% if form.errors.nickname %} {{form.errors.nickname}} {% else %} {{form.nickname.help_text}} {% endif %}</p></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_{{form.password.name}}" class="col-md-3 control-label">{{form.password.label}}</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" id="id_{{form.password.name}}" required name="{{form.password.name}}" value="{{form.data.password}}" />
+                                <p class="help-block">{% if form.errors.password %} {{form.errors.password}} {% else %} {{form.password.help_text}} {% endif %}</p></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_{{form.password_repeat.name}}" class="col-md-3 control-label">{{form.password_repeat.label}}</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" id="id_{{form.password_repeat.name}}" value="{{form.data.password_repeat}}" required name="{{form.password_repeat.name}}" autofocus>
+                                <p class="help-block">{% if form.errors.password_repeat %} {{form.errors.password_repeat}} {% else %} {{form.password_repeat.help_text}} {% endif %}</p></div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-3">
+                            <button type="submit" class="btn btn-success" value="submit">Submit</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
