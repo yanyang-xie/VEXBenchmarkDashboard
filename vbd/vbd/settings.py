@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'authen',
     'dashboard',
 )
@@ -186,3 +187,7 @@ CACHES = {
         }
     },
 }
+
+ADMIN_RESERVED = ['admin', 'login', 'logout', ]
+LAW_RESERVED = ['porn', 'sex', 'fuck', 'shit']
+RESERVED = ADMIN_RESERVED + LAW_RESERVED
