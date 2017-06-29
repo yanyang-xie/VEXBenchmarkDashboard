@@ -45,7 +45,7 @@ class registrationForm(forms.Form):
 
     class Meta:
         model = MyUser
-        exclude = ['user',]
+        #exclude = ['user',]
 
     # 使用 clean__attribute 来对属性进行验证
     def clean_username(self):
@@ -109,7 +109,7 @@ class loginForm(forms.Form):
         )
 
     # 重载 clean 方法
-    def clean(self):
+    def clean_password(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         user = authenticate(username=username, password=password)
@@ -118,7 +118,7 @@ class loginForm(forms.Form):
         elif not user.is_active:
             raise forms.ValidationError(u'该用户已被管理员设置为未激活状态')
 
-        return self.cleaned_data
+        return password
 
 
 # 重新设置密码

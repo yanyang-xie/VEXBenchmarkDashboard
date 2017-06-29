@@ -21,21 +21,13 @@ def user_register(request):
             password=information.get('password')
             email=information.get('email')
             
-            new_user = User.objects.create_user(
-                    username,
-                    password,
-                    email
-            )
+            new_user = User.objects.create_user(username=username, email=email, password=password, )
             new_user.save()
             forumUser = MyUser(user=new_user)
             forumUser.nickname = information.get('nickname')
             forumUser.save()
             
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return HttpResponseRedirect(reverse('homepage'))
-            return HttpResponseRedirect(reverse('homepage'))
+            return HttpResponseRedirect(reverse('login'))
     else:
         form = registrationForm()
 
@@ -43,12 +35,14 @@ def user_register(request):
     return render(request, 'authen/user_register.html', context)
 
 def user_login(request):
+    user = None
     if request.method == 'POST':
         form = loginForm(request.POST)
         if form.is_valid():
             information = form.cleaned_data
-            user = authenticate(username=information.get('username'),
-                                password=information.get('password'))
+            username=information.get('username')
+            password=information.get('password')
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect(reverse('homepage'))
@@ -56,9 +50,7 @@ def user_login(request):
         form = loginForm()
         user = None
 
-    context = {'form': form,
-               'target': {1, 2, 3},
-               }
+    context = {'form': form, 'user': user}
     return render(request, 'authen/user_login.html', context)
 
 

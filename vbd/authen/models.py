@@ -12,4 +12,7 @@ class MyUser(models.Model):
     permission = models.IntegerField(default=1)
 
     def __unicode__(self):
-        return self.user.username
+        if hasattr(self, 'nickname') and self.nickname is not None:
+            return self.nickname
+        else:
+            return self.user.username
