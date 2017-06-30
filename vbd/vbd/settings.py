@@ -1,3 +1,5 @@
+# -*- coding=utf-8 -*-
+
 """
 Django settings for vbd project.
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = (
     'dashboard',
 )
 
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +72,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                # 自定义session处理方法, 将username填充到session, 使得templetes中可以通过{{username}}获取
+                'authen.context_processor.fillup_username_to_session',
             ],
         },
     },
@@ -188,6 +194,7 @@ CACHES = {
     },
 }
 
+#注册用户敏感词过滤
 ADMIN_RESERVED = ['admin', 'login', 'logout', ]
 LAW_RESERVED = ['porn', 'sex', 'fuck', 'shit']
 RESERVED = ADMIN_RESERVED + LAW_RESERVED

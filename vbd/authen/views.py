@@ -45,6 +45,7 @@ def user_login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                request.session['username'] = str(user)
                 return HttpResponseRedirect(reverse('homepage'))
     else:
         form = loginForm()
@@ -57,7 +58,6 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('homepage'))
-
 
 def user_forget_password(request):
     # TODO 重新找回密码
@@ -78,8 +78,7 @@ def user_set_password(request):
     else:
         form = settingpasswordForm()
     context = {
-        'form': form,
-        'user': user,
+        'form': form, 'user': user,
     }
 
     return render(request, 'authen/user_setpassword.html', context)
