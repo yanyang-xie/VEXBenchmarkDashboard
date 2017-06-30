@@ -26,7 +26,7 @@ def user_register(request):
             forumUser = MyUser(user=new_user)
             forumUser.nickname = information.get('nickname')
             forumUser.save()
-            
+            #user_login(request)
             return HttpResponseRedirect(reverse('login'))
     else:
         form = registrationForm()
@@ -53,7 +53,6 @@ def user_login(request):
     context = {'form': form, 'user': user}
     return render(request, 'authen/user_login.html', context)
 
-
 @login_required()
 def user_logout(request):
     logout(request)
@@ -64,19 +63,18 @@ def user_forget_password(request):
     # TODO 重新找回密码
     pass
 
-
 @login_required()
 def user_set_password(request):
     # 重设密码
     user = request.user if request.user else None
-    if request.method == 'POST':
+    if request.method == 'POST' and user is not None:
         form = settingpasswordForm(request.POST, user=request.user)
         if form.is_valid():
-            password = form.cleaned_data.get('password')
+            password = form.cleaned_data.get('password_new')
             user.set_password(password)
             user.save()
             messages.success(request, u'密码成功更新')
-            return HttpResponseRedirect(reverse('homepage', kwargs='user'))
+            return HttpResponseRedirect(reverse('homepage'))
     else:
         form = settingpasswordForm()
     context = {

@@ -130,21 +130,28 @@ class settingpasswordForm(forms.Form):
                                    error_messages=error_messages.get('password'),
                                    help_text='请输入新的密码')
     password_repeat = forms.CharField(min_length=4, max_length=128,
-                                      error_messages=error_messages.get('password'))
+                                      error_messages=error_messages.get('password'),
+                                      help_text='请再次输入新的密码'
+                                      )
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(settingpasswordForm, self).__init__(*args, **kwargs)
 
-    def clean(self):
+    def clean_password_old(self):
         # 只验证，将更新的工作放在 views 里做
         password_old = self.cleaned_data.get('password_old')
+        if not self.user.check_password(password_old):
+            raise forms.ValidationError(u'原始密码错误')
+        
+        return password_old
+    
+    def clean_password_repeat(self):
+        # 只验证，将更新的工作放在 views 里做
         password_new = self.cleaned_data.get('password_new')
         password_repeat = self.cleaned_data.get('password_repeat')
 
-        if not self.user.check_password(password_old):
-            raise forms.ValidationError(u'原始密码错误')
         if password_new != password_repeat:
             raise forms.ValidationError(u'两次密码不统一')
-        return self.cleaned_data
+        return password_new
 
