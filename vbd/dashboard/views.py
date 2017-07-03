@@ -1,5 +1,10 @@
 from django.shortcuts import render
 
+
+def global_settings(request):
+    context = _generate_user_context(request)
+    return render(request, 'dashboard/global_settings.html', context)
+
 # Create your views here.
 def homepage(request):
     context = _generate_user_context(request)

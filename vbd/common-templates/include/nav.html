@@ -71,11 +71,42 @@
                     </ul>
                 </li>
                 <li id='env_settings'>
-                    <a href="{% url 'env_settings' %}">
-                        <span class="glyphicon glyphicon-briefcase">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                    aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-stats">
                             Settings
                         </span>
+                        <span class="caret">
+                        </span>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{% url 'global_settings' %}">
+                                <span class="text-muted text-center">
+                                    Global Settings
+                                </span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider">
+                        </li>
+                        <li>
+                            <a href="{% url 'global_settings'%}">
+                                <span class="text-muted text-center">
+                                    VEX Components
+                                </span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider">
+                        </li>
+                        <li>
+                            <a href="{% url 'global_settings'%}">
+                                <span class="text-muted text-center">
+                                    VEX Simulators
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

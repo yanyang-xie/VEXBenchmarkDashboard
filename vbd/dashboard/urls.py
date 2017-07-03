@@ -11,6 +11,9 @@ from dashboard import views
 urlpatterns = [
     # Examples:
     #url(r'^$', 'dashboard.views.home', name='home'),
+    url(r'^global_settings$', views.global_settings, name='global_settings'),
+    
+    
     url(r'^bop$', views.benchmark_operation, name='benchmark_operation'),
     url(r'^envop$', views.env_operation, name='env_operation'),
     url(r'^config$', views.env_settings, name='env_settings'),
