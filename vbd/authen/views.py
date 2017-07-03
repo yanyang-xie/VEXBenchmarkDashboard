@@ -99,7 +99,8 @@ def user_forget_password(request):
         # check the input
         if form.is_valid():
             human = True
-        
+            
+            # 根据email地址获取用户, 然后生成token发送邮件
             associated_users= User.objects.get(email=form.cleaned_data.get('email'))
             c = {
                 'email': associated_users.email,
