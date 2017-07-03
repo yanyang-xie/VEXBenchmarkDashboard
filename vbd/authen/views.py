@@ -1,14 +1,20 @@
 # -*- coding:utf-8 -*-
+from captcha.helpers import captcha_image_url
+from captcha.models import CaptchaStore
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.http.response import HttpResponse
 from django.shortcuts import render
+
+from authen.forms import ForgetPwdForm
 
 from .forms import registrationForm, loginForm, settingpasswordForm
 from .models import MyUser
+
 
 def user_register(request):
     user = None
@@ -59,10 +65,6 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('homepage'))
 
-def user_forget_password(request):
-    # TODO 重新找回密码
-    pass
-
 @login_required()
 def user_set_password(request):
     # 重设密码
@@ -82,3 +84,26 @@ def user_set_password(request):
     }
 
     return render(request, 'authen/user_setpassword.html', context)
+
+def user_forget_password(request):
+    user = request.user
+    
+    if request.method == 'POST':
+        form = ForgetPwdForm(request.POST)
+        # Validate the form: the captcha field will automatically
+        # check the input
+        if form.is_valid():
+            human = True
+        
+        context = {'form': form, 'user': user, 'send_status': True}
+        return render(request, 'authen/user_forget_password.html', context)
+    else:
+        #刷新验证码
+        if request.GET.get('newsn')=='1':
+            csn=CaptchaStore.generate_key()
+            cimageurl= captcha_image_url(csn)
+            return HttpResponse(cimageurl)
+        
+        form = ForgetPwdForm()
+    context = {'form': form, 'user': user, 'send_status': False}
+    return render(request, 'authen/user_forget_password.html', context)

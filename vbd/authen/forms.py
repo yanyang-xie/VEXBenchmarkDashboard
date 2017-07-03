@@ -4,13 +4,15 @@
 """
 import re
 
+from captcha.fields import CaptchaField
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout
 from django import forms
 from django.conf import settings
 from django.contrib.auth import authenticate
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout
 
 from .models import MyUser
+
 
 # 方便选择
 error_messages = {
@@ -155,3 +157,15 @@ class settingpasswordForm(forms.Form):
             raise forms.ValidationError(u'两次密码不统一')
         return password_new
 
+class ForgetPwdForm(forms.Form):
+    email = forms.EmailField(required=True, help_text='请输入邮箱地址')
+    captcha = CaptchaField(error_messages={"invalid": u"验证码错误"}, help_text='请输入验证码')
+    
+    def clean_email(self):
+        # 验证是否被注册过
+        email = self.cleaned_data.get('email')
+        try:
+            email = MyUser.objects.get(user__email=email)
+            return email
+        except MyUser.DoesNotExist:
+            raise forms.ValidationError(u'邮箱未被注册')

@@ -1,11 +1,15 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import user_passes_test, login_required
-from django.contrib.auth.models import User
 from django.contrib import auth
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import MyUser
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+
+from authen.forms import ForgetPwdForm
+
+from .models import MyUser
+
+
+from django.contrib.auth.decorators import login_required
 
 def signup(request):
     if request.user.is_authenticated():
@@ -36,7 +40,6 @@ def signup(request):
     }
     return render(request, 'authen/signup.html', content)
 
-
 def login(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('homepage'))
@@ -61,7 +64,6 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('homepage'))
-
 
 @login_required
 def set_password(request):

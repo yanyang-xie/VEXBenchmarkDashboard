@@ -10,5 +10,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('authen.urls')),
     url(r'', include('dashboard.urls')),
+    
+    url(r'^captcha/', include('captcha.urls')),
 ]
 
