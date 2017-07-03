@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^set_password/$', views.user_set_password, name='set_password'),
     url(r'^forget_password/$', views.user_forget_password, name='forgetPassword'),
+    
+    url(r'^reset_password_confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', views.reset_password_confirm, name='password_reset_confirm'), 
 ]

@@ -199,3 +199,13 @@ CACHES = {
 ADMIN_RESERVED = ['admin', 'login', 'logout', ]
 LAW_RESERVED = ['porn', 'sex', 'fuck', 'shit']
 RESERVED = ADMIN_RESERVED + LAW_RESERVED
+
+#email
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'yanyang.xie@gmail.com'
+SERVER_EMAIL = 'yanyang.xie@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'yanyang.xie@gmail.com'
+EMAIL_HOST_PASSWORD = '****'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
