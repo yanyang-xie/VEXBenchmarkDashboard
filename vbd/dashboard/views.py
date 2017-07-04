@@ -1,9 +1,38 @@
+# -*- coding:utf-8 -*-
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from dashboard.forms import VEXGolbalSettingsFrom
+from dashboard.models import VEXGolbalSettings
 
+@login_required 
 def global_settings(request):
     context = _generate_user_context(request)
-    return render(request, 'dashboard/global_settings.html', context)
+    if request.method == 'POST':
+        form = VEXGolbalSettingsFrom(request.POST)
+        if form.is_valid():
+            VEXGolbalSettings.objects.all().delete()
+            form.save()
+        
+        context['form'] = form
+        return render(request, 'dashboard/global_settings.html', context)
+    else:
+        
+        settings = VEXGolbalSettings.objects.all()
+        if len(settings) > 0:
+            # 给form初始值, 两种方式
+            '''
+            form = VEXGolbalSettingsFrom(initial={'grafana_http_address': settings[0].grafana_http_address,
+                                                  'kubectl_ip_address': settings[0].kubectl_ip_address
+                                                  })
+            '''
+            form = VEXGolbalSettingsFrom(instance = settings[0])
+        else:
+            form = VEXGolbalSettingsFrom()    
+        
+        context['form'] = form
+        return render(request, 'dashboard/global_settings.html', context)
 
 # Create your views here.
 def homepage(request):
