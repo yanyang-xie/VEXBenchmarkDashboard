@@ -7,9 +7,12 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class MyUser(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=32)
     permission = models.IntegerField(default=1)
+    
+    def delete(self, using=None):
+        self.user.delete()
 
     def __unicode__(self):
         if hasattr(self, 'nickname') and self.nickname is not None:
