@@ -27,6 +27,10 @@ SECRET_KEY = 'gokv-=uwxyrr!qlcqsr72xxj1)vw_ky=p3yl#fgp+2r%g*y^$i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if __file__.find('/Users/xieyanyang') >= 0 else False
+
+#这个是给后续的LOGGING模块使用的
+LOG_LEVEL = 'DEBUG' if __file__.find('/Users/xieyanyang') >= 0 else 'INFO'
+
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [ '*', '127.0.0.1']
@@ -151,7 +155,7 @@ LOGGING = {
             'formatter': 'standard',
         },
         'console':{
-            'level':'DEBUG',
+            'level':LOG_LEVEL,
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
@@ -162,9 +166,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        'perfui': {
+        #注意: 这里要写你的模块的名称
+        'dashboard': {
             'handlers': ['logfile', 'console'],
-            'level': 'INFO',
+            'level': LOG_LEVEL,
             'propagate': True,
         },
         'django.db': {
@@ -172,7 +177,7 @@ LOGGING = {
             'handlers': ['console'],
             
             # if level is debug, then sql will be showed into console
-            'level': 'INFO',
+            'level': LOG_LEVEL,
             'propagate': False,
         },
     }

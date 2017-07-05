@@ -1,10 +1,13 @@
 # -*- coding:utf-8 -*-
+import logging
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from dashboard.forms import VEXGolbalSettingsFrom
 from dashboard.models import VEXGolbalSettings
+
+logger = logging.getLogger(__name__)
 
 @login_required 
 def global_settings(request):
@@ -34,6 +37,16 @@ def global_settings(request):
         context['form'] = form
         return render(request, 'dashboard/global_settings.html', context)
 
+
+
+
+
+
+
+
+
+
+
 # Create your views here.
 def homepage(request):
     context = _generate_user_context(request)
@@ -49,10 +62,7 @@ def benchmark_operation(request):
     
     return render(request, 'dashboard/vod.html', context)
 
-def env_operation(request):
-    context = {'active_menu':'env_operation'}
-    context.update(_generate_user_context(request))
-    return render(request, 'dashboard/vod.html', context)
+
 
 def env_settings(request):
     context = {'active_menu':'env_settings'}
