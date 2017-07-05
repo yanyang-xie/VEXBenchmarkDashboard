@@ -3,7 +3,7 @@ from django.db import models
 SERVICE_STATUS_TYPE = [('Shell', 'Shell'), ('Http', 'Http')]
 SERVICE_STATUS_FLAG = [('0', 'Running'), ('1', 'Stopped')]
 
-# Create your models here.
+# By default, all the vex component has same version, but also can has its special version 
 class VEXVersion(models.Model):
     version = models.CharField(max_length=100, blank=False, null=False, unique=True)
     
@@ -24,7 +24,6 @@ class VEXVersion(models.Model):
         ordering = ['version', ]
         get_latest_by = 'version'
 
-'''
 class ServiceStatus(models.Model):
     status_cmd = models.CharField(max_length=512, blank=True, null=True)
     status_cmd_type = models.CharField(max_length=100, choices=SERVICE_STATUS_TYPE, blank=False, null=False, default=SERVICE_STATUS_TYPE[-1][0])
@@ -56,11 +55,16 @@ class BasicOperation(models.Model):
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     description = models.CharField(max_length=1024, blank=True, null=True)
     
-    group = models.ForeignKey(OperationGroup)
-    status = models.ForeignKey(ServiceStatus, on_delete=models.CASCADE, unique=True)
+    group = models.ForeignKey(OperationGroup,blank=True, null=True)
+    status = models.OneToOneField(ServiceStatus, blank=True, null=True)
     
     class Meta:
         db_table = 'operation'
+    
+    def delete(self, using=None):
+        if self.status is not None:
+            self.status.delete()
+        models.Model.delete(self, using=using)
 
     #class Meta:
     #    abstract = True
@@ -70,7 +74,7 @@ class BasicOperation(models.Model):
                 .format(self.id, self.name, self.start_command, self.stop_command, self.status, self.group)
 
 class VEXOperation(BasicOperation):
-    deploy_command = models.CharField(max_length=512, blank=True, null=True)
+    deploy_command = models.CharField(max_length=512, blank=False, null=False)
     deploy_version = models.ForeignKey(VEXVersion, null=True, blank=True)
     
     class Meta:
@@ -79,7 +83,6 @@ class VEXOperation(BasicOperation):
     def __unicode__(self):
         return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_command_type:{}, status_flag:{}, deploy_command:{}, group:{}'\
                     .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_command_type, self.status_flag, self.deploy_command, self.group.name)
-'''
 
 class VEXGolbalSettings(models.Model):
     kubectl_ip_address = models.GenericIPAddressField(max_length=100, blank=True, null=True)
