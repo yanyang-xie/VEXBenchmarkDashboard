@@ -12,7 +12,7 @@ def generate_user_context(request):
     use_context = {'user':user}
     return use_context
 
-def get_default_deploy_version():
+def use_global_deploy_version():
     global_setting = VEXGolbalSettings.objects.all()
     if global_setting.count() > 0:
         return global_setting[0].use_default_version

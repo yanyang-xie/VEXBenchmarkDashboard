@@ -2,25 +2,34 @@ function getStatus(url) {
     $.ajax({
         url: url,  
         type: 'Get',            
-        success: function (data) {  
+        success: function (data) {
         	for(var o in data){
-        		//alert("id:"+data[o].id+" status:"+data[o].status );  
-        		if (data[o].status == 0){
-        			$("#op_status_" + data[o].id).html("Running");
-        			$("#btn_start_" + data[o].id).hide();
-        			$("#btn_stop_" + data[o].id).show();
-        			$("#warm_up_minute_" + data[o].id).editable('disable');
-        		}else if (data[o].status == 1){
-        			$("#btn_stop_" + data[o].id).hide();
-        			$("#btn_start_" + data[o].id).show();
-        			$("#op_status_" + data[o].id).html("Stopped");
-        			$("#warm_up_minute_" + data[o].id).editable('enable');
+        		var tag = "";
+        		if (data[o].tag == 'vex_op'){
+        			tag = "vex_";
+        			$("#" + tag + "op_running_version_" + data[o].id).html(data[o].running_version);
+        			$("#" + tag + "op_running_build_" + data[o].id).html(data[o].build_info);
+        		}
+        		
+        		//alert(data[o].name + ":" +data[o].status);
+        		//alert(data[o].status == 1)
+        		if (data[o].status == 1){
+        			$("#" + tag + "op_status_" + data[o].id).html("Running");
+        			$("#" + tag + "btn_start_" + data[o].id).hide();
+        			$("#" + tag + "btn_stop_" + data[o].id).show();
+        			$("#" + tag + "warm_up_minute_" + data[o].id).editable('disable');
+        		}else if (data[o].status == 0){
+        			$("#" + tag + "op_status_" + data[o].id).html("Stopped");
+        			$("#" + tag + "btn_stop_" + data[o].id).hide();
+        			$("#" + tag + "btn_start_" + data[o].id).show();
+        			$("#" + tag + "warm_up_minute_" + data[o].id).editable('enable');
         		}else{
+        			$("#" + tag + "op_status_" + data[o].id).html("");
         		}
             } 
         }  
     });  
-}  
+} 
 
 function ucfirst(str) {
 	var str = str.toLowerCase();
@@ -30,7 +39,7 @@ function ucfirst(str) {
 	return str;
 }
 
-function operation(op_tag, op_id, btn_id, is_vex_operation, test_type, update_status_message){
+function operation1(op_tag, op_id, btn_id, is_vex_operation, test_type, update_status_message){
 	var timeout = 300000;
 	var btn = $("#" + btn_id);
 	btn.button('loading');

@@ -58,6 +58,7 @@ class BasicOperation(models.Model):
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     description = models.CharField(max_length=1024, blank=True, null=True)
     status = models.OneToOneField(ServiceStatus, blank=True, null=True)
+    command_timeout = models.IntegerField(blank=False, null=False, default=120)
     
     def delete(self, using=None):
         if self.status is not None:

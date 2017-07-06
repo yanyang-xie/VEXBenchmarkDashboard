@@ -1,18 +1,75 @@
 # -*- coding:utf-8 -*-
-import logging
 import json
+import logging
 
 from django.http.response import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
+import requests
 
 from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion
-from dashboard.utils import generate_user_context, get_default_deploy_version
+from dashboard.utils import generate_user_context, use_global_deploy_version
 
 
 logger = logging.getLogger(__name__)
 
-def operation(requests):
-    pass
+# Execute command
+def execute_cmd(request):
+    try:
+        op_id = request.GET.get('op_id')
+        op_tag = request.GET.get('op_tag')
+        vex_op = request.GET.get('vex_op')
+        logger.debug("Operation:[id:%s, tag:%s, is_vex_op:%s]" %(op_id, op_tag, vex_op))
+        
+        command, obj = _get_operation_command(op_id, op_tag, vex_op)
+        logger.debug("Operation:[id:%s, tag:%s]. Command is [%s]" % (op_id, op_tag, command))
+        if command == "":
+            raise Exception("Not found command['%s']" %(op_tag))
+        
+        # for vex customization
+        if op_tag == 'deploy':
+            # 如果设置了使用全局统一的版本, 那么则取默认的版本, 否则使用单独设置的版本
+            is_use_global_deploy_version = use_global_deploy_version()
+            if is_use_global_deploy_version is True:
+                try:
+                    version = get_object_or_404(VEXVersion, enable=True)
+                except:
+                    version = obj.deploy_version
+            else:
+                version = obj.deploy_version
+            command += ' -v %s' %(version.version)
+        
+        stdout, stderr, ex = _execute_command(command, obj.command_timeout, True)
+        if stderr is not None and len(stderr) > 0:
+            logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
+            json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr).replace('\n', ''))})
+            #logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr).replace('\n', '')))
+            return HttpResponse(json_data, content_type="application/json")
+        elif ex is not None:
+            logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(ex)))
+            json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(ex).replace('\n', ''))})
+            return HttpResponse(json_data, content_type="application/json")
+        '''
+        else:
+            if vex_op == 'true':
+                status_flag = None
+                if op_tag == 'start':
+                    status_flag = True
+                elif op_tag == 'stop':
+                    status_flag = False
+                
+                if status_flag is not None:
+                    obj.status_flag = status_flag
+                    obj.save()
+                    logger.debug('Save performace test operation status for %s to %s' %(obj.name, status_flag))
+        '''
+        logger.info("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
+        # You can dump a lot of structured data into a json object, such as lists and tuples
+        json_data = json.dumps({"status_code": 200, "message": "Success to execute %s [%s]" %(op_tag.lower(), obj.name.lower())})
+        return HttpResponse(json_data, content_type="application/json")
+    except Exception, e:
+        logger.error("Internal Server ERROR. Failed to execute [%s] operation. %s" %(op_tag, e))
+        json_data = json.dumps({"status_code": 500, "message":"Internal Server ERROR. <p>%s</p>" %(str(e))})
+    return HttpResponse(json_data, content_type="application/json")
 
 # Index of environment settings
 def env_setting(request):
@@ -20,7 +77,7 @@ def env_setting(request):
     context.update(generate_user_context(request))
     
     vex_operation_list = VEXOperation.objects.all()
-    if get_default_deploy_version() is True :
+    if use_global_deploy_version() is True :
         version_objs = VEXVersion.objects.filter(is_default=True)
         if version_objs.count() > 0:
             for vex_operation in vex_operation_list:
@@ -68,6 +125,28 @@ def fetch_component_status(request):
     logger.debug('Fetch Operation status: %s' %(json_data))
     return HttpResponse(json_data, content_type="application/json")
 
+def _execute_command(cmd, timeout=30, is_shell=True):
+    try:
+        if is_shell is True:
+            import subprocess
+            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
+            stdout, stderr = process.stdout.readlines(), process.stderr.readlines() 
+            
+            #import os, signal
+            #os.kill(process.pid, signal.SIGKILL)
+            return stdout, stderr, None
+        else:
+            #do_http
+            r = requests.get(cmd, timeout=timeout)
+            if r.status_code != 200 and r.status_code != 204:
+                logger.debug('Service is not running. Cmd is %s, response status code is %s' %(cmd, r.status_code))
+                return None, 'Service is not running', None
+            else:
+                return r.text, None, None
+    except Exception, e:
+        logger.error('Execute command error. Cmd is %s. Error is %s' %(cmd, e))
+        return None, None, e
+
 def _generate_component_status_basic_dict(vex_op):
     op_dict = {'id':vex_op.id, 'name':vex_op.name}
     if vex_op.status is not None:
@@ -76,3 +155,22 @@ def _generate_component_status_basic_dict(vex_op):
         op_dict.update({'status':2})
         
     return op_dict
+
+def _get_operation_command(op_id, op_tag, is_vex_operation):
+    if is_vex_operation == 'true':
+        obj = get_object_or_404(VEXOperation, pk=op_id)
+    else:
+        obj = get_object_or_404(Operation, pk=op_id)
+        
+    command = ""
+    if op_tag == "start" or op_tag == "run":
+        command = obj.start_command
+    elif op_tag == "stop":
+        command = obj.stop_command
+    elif op_tag == "status":
+        command = obj.status_command
+    elif op_tag == "result":
+        command = obj.result_collect_command
+    elif op_tag == "deploy":
+        command = obj.deploy_command
+    return command, obj
