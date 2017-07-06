@@ -11,8 +11,12 @@ from dashboard.utils import generate_user_context, get_default_deploy_version
 
 logger = logging.getLogger(__name__)
 
-def env_operation(request):
-    context = {'active_menu':'env_operation'}
+def operation(requests):
+    pass
+
+# Index of environment settings
+def env_setting(request):
+    context = {'active_menu':'env_setting'}
     context.update(generate_user_context(request))
     
     vex_operation_list = VEXOperation.objects.all()

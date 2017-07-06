@@ -12,9 +12,9 @@ urlpatterns = [
     # Examples:
     #url(r'^$', 'dashboard.views.home', name='home'),
     url(r'^global_settings$', views.global_settings, name='global_settings'),
-    url(r'^envop$', op_views.env_operation, name='env_operation'),
-    url(r'^bop/status$', op_views.fetch_component_status, name='fetch_compontent_status'),
-    
+    url(r'^env-setting$', op_views.env_setting, name='env_setting'),
+    url(r'^op/status$', op_views.fetch_component_status, name='fetch_compontent_status'),
+    url(r'^op/execute$', op_views.operation, name='operation'),
     
     
     url(r'^bop$', views.benchmark_operation, name='benchmark_operation'),
