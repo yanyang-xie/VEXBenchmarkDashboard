@@ -1,8 +1,8 @@
 from django.db import models
-from bson.json_util import default
 
 SERVICE_STATUS_TYPE = [('Shell', 'Shell'), ('Http', 'Http')]
 SERVICE_STATUS_FLAG = [(True, 'Running'), (False, 'Stopped')]
+SERVICE_STATUS_FLAG_DICT = {True:'Running', False: 'Stopped'}
 
 # By default, all the vex component has same version, but also can has its special version 
 class VEXVersion(models.Model):
@@ -26,7 +26,7 @@ class VEXVersion(models.Model):
         get_latest_by = 'version'
 
 class ServiceStatus(models.Model):
-    status_cmd = models.CharField(max_length=512, blank=True, null=True)
+    status_cmd = models.CharField(max_length=512, blank=False, null=False, default="1234")
     status_cmd_type = models.CharField(max_length=100, choices=SERVICE_STATUS_TYPE, blank=False, null=False, default=SERVICE_STATUS_TYPE[-1][0])
     status_cmd_timeout = models.IntegerField(blank=False, null=False, default=120)
     status_flag = models.BooleanField(choices=SERVICE_STATUS_FLAG, blank=False, null=False, default=SERVICE_STATUS_FLAG[-1][0])
@@ -90,7 +90,7 @@ class VEXOperation(BasicOperation):
     running_version = models.CharField(max_length=512, blank=True, null=True)
     
     class Meta:
-        db_table = 'deploy_operation'
+        db_table = 'vex_operation'
         
     def __unicode__(self):
         return 'id:{}, name:{}, start_command:{}, stop_command:{}, status:{}, deploy_command:{}, deploy_version:{}, build_info:{}, running_version'\

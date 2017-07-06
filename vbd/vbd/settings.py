@@ -159,6 +159,11 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
+        'console_db':{
+            'level':'ERROR',
+            'class':'logging.StreamHandler',
+            'formatter': 'standard'
+        },
     },
     'loggers': {
         'django.request': {
@@ -174,10 +179,10 @@ LOGGING = {
         },
         'django.db': {
             # # django also has database level logging
-            'handlers': ['console'],
+            'handlers': ['console_db'],
             
-            # if level is debug, then sql will be showed into console
-            'level': LOG_LEVEL,
+            # if level is DEBUG, then sql will be showed into console
+            'level': 'ERROR',
             'propagate': False,
         },
     }
