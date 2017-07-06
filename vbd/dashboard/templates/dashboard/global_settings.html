@@ -7,11 +7,13 @@
 
 var tmp_kubectl_ip_address = "";
 var tmp_grafana_http_address = "";
+var tmp_use_default_version = "";
 
 $(function() {
 	{% if form.errors %}
 		$("#id_kubectl_ip_address").attr("disabled",false);
 		$("#id_grafana_http_address").attr("disabled",false);
+		$("#id_use_default_version").attr("disabled",false);
 	
 		$("#edit_button").hide();
 		$("#save_button").show();
@@ -19,15 +21,22 @@ $(function() {
 		
 		tmp_kubectl_ip_address = "{{ form.kubectl_ip_address.value }}";
 		tmp_grafana_http_address = "{{ form.grafana_http_address.value }}";
+		tmp_use_default_version = "{{ form.use_default_version.value }}";
+	{% endif %}
+	
+	{% if form.use_default_version.value %} 
+		$("#id_use_default_version").attr("checked",true);
 	{% endif %}
 });
 
 function edit(){
 	$("#id_kubectl_ip_address").attr("disabled",false);
 	$("#id_grafana_http_address").attr("disabled",false);
+	$("#id_use_default_version").attr("disabled",false);
 	
 	tmp_kubectl_ip_address = $("#id_kubectl_ip_address").val();
 	tmp_grafana_http_address = $("#id_grafana_http_address").val();
+	tmp_use_default_version = $("#id_use_default_version").val();
 	
 	$("#edit_button").hide();
 	$("#save_button").show();
@@ -38,8 +47,15 @@ function cancel(){
 	$("#id_kubectl_ip_address").val(tmp_kubectl_ip_address);
 	$("#id_grafana_http_address").val(tmp_grafana_http_address);
 	
+	if (tmp_use_default_version=="True"){
+		$("#id_use_default_version").prop("checked", true);
+	}else{
+		$("#id_use_default_version").prop("checked", false);
+	}
+	
 	$("#id_kubectl_ip_address").attr("disabled",true);
 	$("#id_grafana_http_address").attr("disabled",true);
+	$("#id_use_default_version").attr("disabled",true);
 	
 	$("#edit_button").show();
 	$("#save_button").hide();
@@ -81,6 +97,21 @@ function cancel(){
                                 {% endif %}
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="id_use_default_version_label" class="col-md-3 control-label">{{ form.use_default_version.label }}</label>
+                            <div class="col-md-9">
+                            	<input type="checkbox" class="form-control" 
+                            		id="id_{{ form.use_default_version.name }}" name="{{ form.use_default_version.name }}" 
+                            		autofocus disabled >
+                                {% if form.errors.use_default_version %}
+                                	<div class="has-warning"><label class="control-label" for="inputWarning">{{form.errors.use_default_version}}</label></div>
+                                {% else %}
+                                	<p class="help-block"> {{form.use_default_version.help_text}} </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
                         <div class="col-md-5 col-md-offset-3">
                             <button type="button" id="edit_button" class="btn btn-success" value="edit" onclick="edit()">Edit</button>
                             <button type="submit" id="save_button" class="btn btn-success" value="save" style="display:none;">Save</button>
