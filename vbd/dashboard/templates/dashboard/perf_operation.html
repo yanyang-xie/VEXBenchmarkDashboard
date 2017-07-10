@@ -36,7 +36,7 @@
 	$(function() {
 	    $.fn.editable.defaults.mode = 'inline';
 	    $('#vex_operations a').editable({
-	    	url:'/op/update',
+	    	url:"{% url 'update_benchmark_config' %}",
 	    	data: {name: 'yy-xie', csrfmiddlewaretoken: '{{ csrf_token  }}'},
 	        success: function(response) {
 		    },
@@ -51,12 +51,12 @@
 		    }
 	    });
 	    
-	    //getVEXPerfTestStatus();
-	    setInterval("getVEXPerfTestStatus()", 120000);
+	    getVEXPerfTestStatus();
+	    setInterval("getVEXPerfTestStatus()", 2000);
 	});
 	
 	function getVEXPerfTestStatus() {
-		url = "/op/perfstatus";
+		url = "{% url 'fetch_compontent_status' %}";
 		getStatus(url);
     }
 	
@@ -141,14 +141,14 @@
 		            		<span class="add-on">Session</span>
 		            	{% endifequal %}
 		            </td>
-		            <td><a href="#" id="warm_up_minute_{{ vex_operation.id }}" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> 
+		            <td><a href="#" id="benchmark_warm_up_minute_{{ vex_operation.id }}" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> 
 			            {% ifequal vex_operation.perf_config.test_type 'VOD_T6'%}
 			            	Minutes
 			            {% else %}
 		            		Minutes
 		            	{% endifequal %}
 		            </td>
-		            <td id="op_status_{{vex_operation.id}}" >
+		            <td id="benchmark_op_status_{{vex_operation.id}}" >
 			            {% if vex_operation.status_flag %}
 			            	Running
 			            {% else %}
@@ -157,13 +157,13 @@
 		            </td>
 		            <td class='mytd text-left'>
 		            	{% if vex_operation.start_command%}
-		            		<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" {% if vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','true')"><span class="glyphicon glyphicon-play"></span> Start</button>
+		            		<button type="button" id="benchmark_btn_start_{{vex_operation.id}}" class="btn btn-success" {% if vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','true')"><span class="glyphicon glyphicon-play"></span> Start</button>
 						{% endif %}
 						{% if vex_operation.stop_command %}
-						    <button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" {% if not vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','true')"><span class="glyphicon glyphicon-stop"></span> Stop</button>
+						    <button type="button" id="benchmark_btn_stop_{{vex_operation.id}}" class="btn btn-primary" {% if not vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','true')"><span class="glyphicon glyphicon-stop"></span> Stop</button>
 						{% endif%}
 						{% if vex_operation.result_collect_command %}
-							<button type="button" id="btn_result_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','false')"><span class="glyphicon glyphicon-save"></span> Result</button>
+							<button type="button" id="benchmark_btn_result_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','false')"><span class="glyphicon glyphicon-save"></span> Result</button>
 						{% endif%}
 		            </td>
 		        </tr>

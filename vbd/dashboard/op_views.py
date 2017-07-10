@@ -25,8 +25,9 @@ def benchmark_operation(request):
     
     return render_to_response('dashboard/perf_operation.html', context)
 
+# update benchmark test configuration
 @csrf_exempt
-def update_operation_config(request):
+def update_benchmark_config(request):
     try:
         #print request.POST.items()
         pk = request.POST.get('pk')
@@ -167,6 +168,13 @@ def fetch_component_status(request):
     for op in operation_list:
         op_dict = _generate_component_status_basic_dict(op)
         op_dict.update({'tag':'basic_op'})
+        status_list.append(op_dict)
+    
+    #get operation list
+    benchmark_operation_list = VEXPerfTestOperation.objects.all()
+    for op in benchmark_operation_list:
+        op_dict = _generate_component_status_basic_dict(op)
+        op_dict.update({'tag':'benchmark_op'})
         status_list.append(op_dict)
     
     json_data = json.dumps(status_list)

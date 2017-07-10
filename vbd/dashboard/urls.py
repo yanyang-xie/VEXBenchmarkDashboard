@@ -22,7 +22,7 @@ urlpatterns = [
     # Components status and operation
     url(r'^op/status$', op_views.fetch_component_status, name='fetch_compontent_status'),
     url(r'^op/execute$', op_views.execute_cmd, name='execute_cmd'),
-    url(r'^op/update$', op_views.update_operation_config, name='update_operation_config'),
+    url(r'^op/update$', op_views.update_benchmark_config, name='update_benchmark_config'),
     
     
     # Benchmark operation Home

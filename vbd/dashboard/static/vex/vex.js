@@ -9,6 +9,8 @@ function getStatus(url) {
         			tag = "vex_";
         			$("#" + tag + "op_running_version_" + data[o].id).html(data[o].running_version);
         			$("#" + tag + "op_running_build_" + data[o].id).html(data[o].build_info);
+        		}else if(data[o].tag == 'benchmark_op'){
+        			tag = "benchmark_";
         		}
         		
         		//alert(data[o].name + ":" +data[o].status);
