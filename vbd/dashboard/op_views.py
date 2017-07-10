@@ -2,15 +2,63 @@
 import json
 import logging
 
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest, \
+    HttpResponseServerError
 from django.shortcuts import render_to_response, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 import requests
 
-from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion
+from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion, \
+    CHOICES_TYPE, VEXPerfTestOperation
 from dashboard.utils import generate_user_context, use_global_deploy_version
 
 
 logger = logging.getLogger(__name__)
+
+def benchmark_operation(request):
+    context = {'active_menu':'benchmark_operation'}
+    context.update(generate_user_context(request))
+    
+    vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
+    context.update({'vex_operation_list': vex_operation_list,})
+    logger.debug('perf_op_index context: %s' %(context))
+    
+    return render_to_response('dashboard/perf_operation.html', context)
+
+@csrf_exempt
+def update_operation_config(request):
+    try:
+        #print request.POST.items()
+        pk = request.POST.get('pk')
+        name = request.POST.get('name')
+        value = int(request.POST.get('value'))
+        logger.debug('Update: pk:%s, name:%s, value:%s' %(pk, name , value))
+        vex_op_object = get_object_or_404(VEXPerfTestOperation, pk=pk)
+        perf_config = vex_op_object.perf_config
+        
+        if name.find('content_size')>-1: perf_config.content_size=value
+        if name.find('bitrate_number')>-1: perf_config.bitrate_number=value
+        if name.find('warm_up_minute')>-1: perf_config.warm_up_minute=value
+        
+        if name.find('session_number')>-1:
+            # to linear, if it is running, then session number could not be decreased.
+            if perf_config.test_type in [CHOICES_TYPE[-1][0],] and vex_op_object.status_flag is True and value < perf_config.session_number:
+                logger.error('Linear performance test is running, value of %s must be larger than before' %(name))
+                response = HttpResponseBadRequest('Linear performance test is running, value of %s must be larger than before' %(name))
+                return response
+            else: 
+                perf_config.session_number=value
+        
+        perf_config.save()
+        return HttpResponse('Saved')
+    except ValueError, e:
+        logger.error('Value of %s must be int. %s' %(name, e))
+        response = HttpResponseBadRequest('Value of %s must be int' %(name))
+        return response
+    except Exception, e:
+        logger.error('Failed to save the change. %s' %e)
+        response = HttpResponseServerError('Server ERROR')
+        return response
 
 # Execute command
 def execute_cmd(request):

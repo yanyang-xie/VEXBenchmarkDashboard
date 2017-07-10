@@ -1,0 +1,176 @@
+{% extends "dashboard-base.html" %}
+{% load staticfiles %}
+{% block title %}Benchmark Operation{% endblock %}
+
+{% block dashboard-header %}
+<style>
+    .table > tbody > tr > td,th,thead {
+	     vertical-align: middle;
+	     height: 50px;
+	     text-overflow: ellipsis; /* for IE */  
+	    -moz-text-overflow: ellipsis; /* for Firefox,mozilla */  
+	    overflow: hidden;   
+	    white-space: nowrap;
+	}
+	
+    .table {width: 100%; table-layout: fixed;}
+    .td {word-break: break-all; word-wrap:break-word;}
+	
+	#operations {   
+	   table-layout: fixed;   
+	   width: 100% border:0px;   
+	   margin: 0px;   
+	} 
+	
+	.table > thead > tr > th{
+		vertical-align: middle;
+	}
+	
+	.mytd{
+		text-align: left 
+	}
+	
+</style>
+
+<script>
+	$(function() {
+	    $.fn.editable.defaults.mode = 'inline';
+	    $('#vex_operations a').editable({
+	    	url:'/op/update',
+	    	data: {name: 'yy-xie', csrfmiddlewaretoken: '{{ csrf_token  }}'},
+	        success: function(response) {
+		    },
+		    error:function(data)
+		    {
+		    	//alert(data["status"]);
+		    	bootbox.alert({
+					title: "<p><strong class='text-danger'> Failure</p>",
+					message: "<p><strong class='text-warning'>" + data["responseText"] + "</p>",
+				    size: 'large'
+				});
+		    }
+	    });
+	    
+	    //getVEXPerfTestStatus();
+	    setInterval("getVEXPerfTestStatus()", 120000);
+	});
+	
+	function getVEXPerfTestStatus() {
+		url = "/op/perfstatus";
+		getStatus(url);
+    }
+	
+</script>
+{% endblock%}
+
+{% block content %}
+<row class="col-sm-12 col-md-12">
+    <div class="panel panel-success">
+	    <div class="panel-heading">
+			<h3 class="panel-title">Benchmark Test Profile</h3>
+		</div>
+		<table class="table table-condensed text-info table-striped" style="word-break:break-all; word-wrap:break-all;">
+			<tr>
+			    <td class="text-center" style="width:8%">VOD</td>
+			    <td style="word-break:break-all; word-wrap:break-all;">
+			    <em>
+			    Start with one master manifest request and more media requests for every session
+			    <br />
+			    VEX benchmark key is the number of concurrent sessions per second
+			    </em>
+			    </td>
+			</tr>
+			<tr>
+			    <td class="text-center" style="width:8%">Linear</td>
+			    <td style="word-break:break-all; word-wrap:break-all;">
+			    <em>
+			    Start with one master manifest request and one media request, and continuously serve a media request every 2 seconds for every session
+			    <br />
+			    VEX benchmark key is the max number of sessions it can manage
+			    </em>
+				<br />
+				</td>
+			</tr>
+		</table>
+    </div>
+</row>
+
+<row class="col-sm-12 col-md-12">
+	 <div class="caption">
+		<table id="vex_operations" data-toggle="table" class="table table-striped table-bordered table-hover">
+			<colgroup>
+				<col style="width:6%">
+				<col style="width:6%">
+				<col style="width:6%">
+				<col style="width:6%">
+				<col style="width:6%">
+				<col style="width:6%">
+				<col style="width:6%">
+				<col style="width:15%">
+			</colgroup>
+			<thead >
+			    <tr>
+			      <th class='text-center'>Name</th>
+			      <th class='text-center'>Test Type</th>
+			      <th class='text-center'>Content No.</th>
+			      <th class='text-center'>Bitrate No.</th>
+			      <th class='text-center'>Session No.</th>
+			      <th class='text-center'>Warm Up</th>
+			      <th class='text-center'>Status</th>
+			      <th class='text-center'>Action</th>
+			     </tr>
+			</thead>
+			<tbody class="text-info">
+			    {% for vex_operation in vex_operation_list %}
+			    <tr class="success text-center">
+			    {% if forloop.counter|divisibleby:"2" %}
+				    <tr class="success text-center">
+				{% elif forloop.counter|divisibleby:"3" %}
+				    <tr class="active text-center">
+				{% else %}
+				    <tr class="warning text-center">
+				{% endif %}
+		            <td>{{ vex_operation.name }}</td>
+		            <td>{{ vex_operation.perf_config.test_type }}</td>
+		            <td><a href="#" id="content_size" name="content_size" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.content_size }}</a></td>
+		            <td><a href="#" id="bitrate_number" name="bitrate_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.bitrate_number }}</a></td>
+		            <td><a href="#" id="session_number" name="session_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.session_number }} </a>
+		            	{% ifequal vex_operation.perf_config.test_type 'VOD_T6'%}
+		            		<span class="add-on">/Second</span> 
+		            	{% else %}
+		            		<span class="add-on">Session</span>
+		            	{% endifequal %}
+		            </td>
+		            <td><a href="#" id="warm_up_minute_{{ vex_operation.id }}" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> 
+			            {% ifequal vex_operation.perf_config.test_type 'VOD_T6'%}
+			            	Minutes
+			            {% else %}
+		            		Minutes
+		            	{% endifequal %}
+		            </td>
+		            <td id="op_status_{{vex_operation.id}}" >
+			            {% if vex_operation.status_flag %}
+			            	Running
+			            {% else %}
+			            	Stopped
+			            {% endif %}
+		            </td>
+		            <td class='mytd text-left'>
+		            	{% if vex_operation.start_command%}
+		            		<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" {% if vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','true')"><span class="glyphicon glyphicon-play"></span> Start</button>
+						{% endif %}
+						{% if vex_operation.stop_command %}
+						    <button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" {% if not vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','true')"><span class="glyphicon glyphicon-stop"></span> Stop</button>
+						{% endif%}
+						{% if vex_operation.result_collect_command %}
+							<button type="button" id="btn_result_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}','false')"><span class="glyphicon glyphicon-save"></span> Result</button>
+						{% endif%}
+		            </td>
+		        </tr>
+		        {% endfor %}
+			 </tbody>
+		</table>
+	</div>
+	<div class="divider"><h5 class="page-header"></h5></div>
+</row>
+{% endblock%}

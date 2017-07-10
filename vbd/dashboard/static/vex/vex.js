@@ -39,7 +39,7 @@ function ucfirst(str) {
 	return str;
 }
 
-function operation1(op_tag, op_id, btn_id, is_vex_operation, test_type, update_status_message){
+function operation(op_tag, op_id, btn_id, is_vex_operation, test_type, update_status_message){
 	var timeout = 300000;
 	var btn = $("#" + btn_id);
 	btn.button('loading');
