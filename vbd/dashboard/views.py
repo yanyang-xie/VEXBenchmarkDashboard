@@ -6,12 +6,23 @@ from django.shortcuts import render
 
 from dashboard.forms import VEXGolbalSettingsFrom
 from dashboard.models import VEXGolbalSettings
+from dashboard.utils import generate_user_context
+
 
 logger = logging.getLogger(__name__)
 
+# Create your views here.
+def homepage(request):
+    context = generate_user_context(request)
+    return render(request, 'dashboard/vod.html', context)
+
+def about(request):
+    context = generate_user_context(request)
+    return render(request, 'about.html', context)
+
 @login_required 
 def global_settings(request):
-    context = _generate_user_context(request)
+    context = generate_user_context(request)
     if request.method == 'POST':
         form = VEXGolbalSettingsFrom(request.POST)
         if form.is_valid():
@@ -46,35 +57,3 @@ def global_settings(request):
 
 
 
-
-# Create your views here.
-def homepage(request):
-    context = _generate_user_context(request)
-    return render(request, 'dashboard/vod.html', context)
-
-def about(request):
-    context = _generate_user_context(request)
-    return render(request, 'about.html', context)
-
-def benchmark_operation(request):
-    context = {'active_menu':'benchmark_operation'}
-    context.update(_generate_user_context(request))
-    
-    return render(request, 'dashboard/vod.html', context)
-
-
-
-def env_settings(request):
-    context = {'active_menu':'env_settings'}
-    context.update(_generate_user_context(request))
-    return render(request, 'dashboard/vod.html', context)
-
-def benchmark_result(request, test_type):
-    context = {'active_menu':'benchmark_result'}
-    context.update(_generate_user_context(request))
-    return render(request, 'dashboard/vod.html', context)
-
-def _generate_user_context(request):
-    user = request.user if request.user.is_authenticated() else None
-    use_context = {'user':user}
-    return use_context

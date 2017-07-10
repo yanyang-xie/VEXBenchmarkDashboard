@@ -6,7 +6,8 @@ Created on Jun 28, 2017
 
 from django.conf.urls import url
 
-from dashboard import views, op_views
+from dashboard import views, op_views, result_views
+
 
 urlpatterns = [
     # Examples:
@@ -27,13 +28,6 @@ urlpatterns = [
     # Benchmark operation Home
     url(r'^bop$', op_views.benchmark_operation, name='benchmark_operation'),
     
-    
-    
-    
-    
-    
-    
-    url(r'^config$', views.env_settings, name='env_settings'),
-    
-    url(r'^result/(?P<test_type>.+)', views.benchmark_result, name='benchmark_result'),
+    # Benchmark result Home
+    url(r'^result/(?P<test_type>.+)', result_views.benchmark_result, name='benchmark_result'),
 ]
