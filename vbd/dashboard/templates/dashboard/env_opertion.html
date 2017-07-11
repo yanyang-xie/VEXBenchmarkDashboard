@@ -33,7 +33,7 @@
 	$(function() {
 	    $.fn.editable.defaults.mode = 'inline';
 	    $('#vex_operations a').editable({
-	    	url:"{% url 'update_benchmark_config' %},
+	    	url:"{% url 'update_benchmark_config' %}",
 	        success: function(response) {
 	        	//alert(response)
 		    },
@@ -42,7 +42,7 @@
 		        //alert(response);
 		    }
 	    });
-	     
+	    
 	    setInterval("getBasicCompontentStatus()", 1000);
 	    getBasicCompontentStatus();
 	});

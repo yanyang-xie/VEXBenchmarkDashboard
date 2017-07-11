@@ -124,9 +124,11 @@ class VEXVersion(models.Model):
         get_latest_by = 'version'
 
 class ServiceStatus(models.Model):
-    status_cmd = models.CharField(max_length=512, blank=False, null=False, default="1234")
+    status_cmd = models.CharField(max_length=512, blank=False, null=False)
     status_cmd_type = models.CharField(max_length=100, choices=SERVICE_STATUS_TYPE, blank=False, null=False, default=SERVICE_STATUS_TYPE[-1][0])
-    status_cmd_timeout = models.IntegerField(blank=False, null=False, default=120)
+    
+    # http request timeout
+    status_cmd_timeout = models.IntegerField(blank=False, null=False, default=20)
     status_flag = models.BooleanField(choices=SERVICE_STATUS_FLAG, blank=False, null=False, default=SERVICE_STATUS_FLAG[-1][0])
     
     # store the response message from status CMD

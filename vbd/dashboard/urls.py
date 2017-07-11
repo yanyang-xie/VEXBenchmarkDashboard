@@ -30,4 +30,8 @@ urlpatterns = [
     
     # Benchmark result Home
     url(r'^result/(?P<test_type>.+)', result_views.benchmark_result, name='benchmark_result'),
+    
+    # period scrapy component status
+    url(r'^scrapy$', op_views.period_scrapy_component_status_by_status_cmd, name='scrapy_status'), 
+    
 ]
