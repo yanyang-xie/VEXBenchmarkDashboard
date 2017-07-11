@@ -2,6 +2,9 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from dashboard import views
 
+handler404 = 'dashboard.views.page_not_found'
+handler500 = 'dashboard.views.page_error'
+
 urlpatterns = [
     # Examples:
     url(r'^$', views.homepage, name='homepage'),

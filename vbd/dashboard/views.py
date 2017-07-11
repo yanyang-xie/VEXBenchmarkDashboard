@@ -2,7 +2,7 @@
 import logging
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 
 from dashboard.forms import VEXGolbalSettingsFrom
 from dashboard.models import VEXGolbalSettings
@@ -14,7 +14,13 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 def homepage(request):
     context = generate_user_context(request)
-    return render(request, 'dashboard/vod.html', context)
+    return render(request, 'dashboard/homepage.html', context)
+
+def page_not_found(request):
+    return render_to_response('404.html')
+
+def page_error(request):
+    return render_to_response('500.html')
 
 def about(request):
     context = generate_user_context(request)

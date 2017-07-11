@@ -26,10 +26,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'gokv-=uwxyrr!qlcqsr72xxj1)vw_ky=p3yl#fgp+2r%g*y^$i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if __file__.find('/Users/xieyanyang') >= 0 else False
+# DEBUG = True if __file__.find('/Users/xieyanyang') >= 0 else False
+DEBUG = False
 
 #这个是给后续的LOGGING模块使用的
-LOG_LEVEL = 'DEBUG' if __file__.find('/Users/xieyanyang') >= 0 else 'INFO'
+#LOG_LEVEL = 'DEBUG' if __file__.find('/Users/xieyanyang') >= 0 else 'INFO'
+LOG_LEVEL='INFO'
 
 TEMPLATE_DEBUG = False
 
