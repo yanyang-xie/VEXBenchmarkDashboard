@@ -2,14 +2,12 @@
 import json
 import logging
 import subprocess
+import requests
 
-from django.http.response import HttpResponse, HttpResponseBadRequest, \
-    HttpResponseServerError
+from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-import requests
 from requests.exceptions import ConnectionError, Timeout
-
 from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion, \
     CHOICES_TYPE, VEXPerfTestOperation, ServiceStatus, SERVICE_STATUS_TYPE
 from dashboard.utils import generate_user_context, use_global_deploy_version
@@ -99,20 +97,19 @@ def execute_cmd(request):
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(ex)))
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(ex).replace('\n', ''))})
             return HttpResponse(json_data, content_type="application/json")
-        '''
         else:
-            if vex_op == 'true':
-                status_flag = None
-                if op_tag == 'start':
-                    status_flag = True
-                elif op_tag == 'stop':
-                    status_flag = False
-                
-                if status_flag is not None:
-                    obj.status_flag = status_flag
-                    obj.save()
-                    logger.debug('Save performace test operation status for %s to %s' %(obj.name, status_flag))
-        '''
+            status_flag = None
+            if op_tag == 'start':
+                status_flag = True
+            elif op_tag == 'stop':
+                status_flag = False
+            
+            if status_flag is not None:
+                service_status_obj = obj.status
+                service_status_obj.status_flag = status_flag
+                service_status_obj.save()
+                logger.debug('Save operation status for %s to %s' %(obj.name, status_flag))
+        
         logger.info("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
         # You can dump a lot of structured data into a json object, such as lists and tuples
         json_data = json.dumps({"status_code": 200, "message": "Success to execute %s [%s]" %(op_tag.lower(), obj.name.lower())})
@@ -152,7 +149,7 @@ def env_setting(request):
     return render_to_response('dashboard/env_opertion.html', context)
 
 #定时从数据库中找出所有有status url的model,然后抓取status
-def period_scrapy_component_status_by_status_cmd(request):
+def period_scrapy_component_status_by_status_cmd():
     
     status_objs = ServiceStatus.objects.filter(status_cmd__isnull=False, )
     status_list = []
@@ -168,7 +165,7 @@ def period_scrapy_component_status_by_status_cmd(request):
         
         if ex is not None:
             #logger.error(type(ex))
-            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': str(type(ex))})
+            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': str(type(ex))[0:200]})
             
             if isinstance(ex, (ConnectionError, Timeout)):
                 status_obj.status_response = str(ex)
@@ -184,7 +181,7 @@ def period_scrapy_component_status_by_status_cmd(request):
             # to vex operation, need parse its response
             _pasre_vex_components(status_obj)
         else:
-            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': stderr})
+            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': stderr[0:200]})
             status_obj.status_response = stderr
             status_obj.status_flag=False
             status_obj.save()
@@ -228,7 +225,6 @@ def fetch_component_status(request):
 def _execute_command(cmd, timeout=30, is_shell=True):
     try:
         if is_shell is True:
-            import subprocess
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
             stdout, stderr = process.stdout.readlines(), process.stderr.readlines() 
             
