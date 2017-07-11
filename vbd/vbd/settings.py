@@ -224,8 +224,8 @@ EMAIL_HOST_PASSWORD = '****'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Add a scheduler job to get status
-from apscheduler.scheduler import Scheduler
-from dashboard.op_views import period_scrapy_component_status_by_status_cmd
-sched = Scheduler()
-sched.add_interval_job(period_scrapy_component_status_by_status_cmd, seconds=60)
-sched.start()
+#from apscheduler.scheduler import Scheduler
+#from dashboard.op_views import period_scrapy_component_status_by_status_cmd
+#sched = Scheduler()
+#sched.add_interval_job(period_scrapy_component_status_by_status_cmd, seconds=60)
+#sched.start()

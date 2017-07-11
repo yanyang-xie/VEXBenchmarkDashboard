@@ -1,8 +1,7 @@
 from django.test import TestCase
 
 from dashboard.models import VEXVersion, ServiceStatus, SERVICE_STATUS_TYPE, \
-    BasicOperation
-
+    Operation
 
 class VEXVersionTestCase(TestCase):
     def setUp(self):
@@ -43,16 +42,16 @@ class BasicOperationTestCase(TestCase):
         self.status_cmd = 'http://www.sina.com'
     
     def test_basic_operation_model(self):
-        BasicOperation.objects.create(name=self.op_name)
-        b1 = BasicOperation.objects.get(name=self.op_name)
+        Operation.objects.create(name=self.op_name)
+        b1 = Operation.objects.get(name=self.op_name)
         self.assertEqual(b1.name, self.op_name)
         b1.delete()
         
     def test_basic_operation_delete_model(self):
         s1 = ServiceStatus.objects.create(status_cmd=self.status_cmd)
         
-        BasicOperation.objects.create(name=self.op_name, status=s1)
-        b1 = BasicOperation.objects.get(name=self.op_name)
+        Operation.objects.create(name=self.op_name, status=s1)
+        b1 = Operation.objects.get(name=self.op_name)
         self.assertEqual(b1.name, self.op_name)
         self.assertEqual(b1.status.status_cmd, self.status_cmd)
         
