@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 def homepage(request):
-    context = generate_user_context(request)
+    #context = generate_user_context(request)
+    context = {}
     return render(request, 'dashboard/homepage.html', context)
 
 def page_not_found(request):
@@ -23,12 +24,14 @@ def page_error(request):
     return render_to_response('500.html')
 
 def about(request):
-    context = generate_user_context(request)
+    #context = generate_user_context(request)
+    context = {}
     return render(request, 'about.html', context)
 
 @login_required 
 def global_settings(request):
-    context = generate_user_context(request)
+    #context = generate_user_context(request)
+    context = {}
     if request.method == 'POST':
         form = VEXGolbalSettingsFrom(request.POST)
         if form.is_valid():

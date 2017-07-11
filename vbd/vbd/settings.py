@@ -26,8 +26,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'gokv-=uwxyrr!qlcqsr72xxj1)vw_ky=p3yl#fgp+2r%g*y^$i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True if __file__.find('/Users/xieyanyang') >= 0 else False
-DEBUG = False
+DEBUG = True if __file__.find('/Users/xieyanyang') >= 0 else False
+#DEBUG = False
 
 #这个是给后续的LOGGING模块使用的
 #LOG_LEVEL = 'DEBUG' if __file__.find('/Users/xieyanyang') >= 0 else 'INFO'
@@ -81,8 +81,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 
-                # 自定义session处理方法, 将username填充到session, 使得templetes中可以通过{{username}}获取
-                'authen.context_processor.fillup_username_to_session',
+                # 自定义session处理方法. 可以将期望的数据加入到context中.
+                'authen.context_processor.fillup_user_into_context',
             ],
         },
     },

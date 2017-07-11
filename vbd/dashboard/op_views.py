@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def benchmark_operation(request):
     context = {'active_menu':'benchmark_operation'}
-    context.update(generate_user_context(request))
+    #context.update(generate_user_context(request))
     
     vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
     context.update({'vex_operation_list': vex_operation_list,})
@@ -122,7 +122,7 @@ def execute_cmd(request):
 # Index of environment settings
 def env_setting(request):
     context = {'active_menu':'env_setting'}
-    context.update(generate_user_context(request))
+    #context.update(generate_user_context(request))
     
     vex_operation_list = VEXOperation.objects.all()
     if use_global_deploy_version() is True :
