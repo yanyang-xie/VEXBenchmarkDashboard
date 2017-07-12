@@ -1,17 +1,18 @@
 # -*- coding:utf-8 -*-
+from datetime import datetime
 import json
 import logging
 import subprocess
-import requests
 
+from dateutil.relativedelta import relativedelta
 from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from requests.exceptions import ConnectionError, Timeout
+import requests
+
 from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion, \
     CHOICES_TYPE, VEXPerfTestOperation, ServiceStatus, SERVICE_STATUS_TYPE
-from dashboard.utils import generate_user_context, use_global_deploy_version
-
+from dashboard.utils import use_global_deploy_version
 
 logger = logging.getLogger(__name__)
 
@@ -149,46 +150,50 @@ def env_setting(request):
     return render_to_response('dashboard/env_opertion.html', context)
 
 #定时从数据库中找出所有有status url的model,然后抓取status
-def period_scrapy_component_status_by_status_cmd():
-    
-    status_objs = ServiceStatus.objects.filter(status_cmd__isnull=False, )
-    status_list = []
-    
-    for status_obj in status_objs:
-        status_command = status_obj.status_cmd
-        stdout, stderr, ex = None, None,None
-        if status_obj.status_cmd_type == SERVICE_STATUS_TYPE[0][0]:
-            # shell
-            stdout, stderr, ex = _execute_command(status_command)
-        else:
-            stdout, stderr, ex = _execute_command(status_command, status_obj.status_cmd_timeout, False)
+def period_scrapy_component_status():
+    logger.debug("Start to scrapy component status")
+    try:
+        status_objs = ServiceStatus.objects.filter(status_cmd__isnull=False, )
         
-        if ex is not None:
-            #logger.error(type(ex))
-            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': str(type(ex))[0:200]})
-            
-            if isinstance(ex, (ConnectionError, Timeout)):
-                status_obj.status_response = str(ex)
-                status_obj.status_flag=False
-                status_obj.save()
-            
-        elif stderr is None or len(stderr) == 0:
-            status_list.append({'cmd':status_command,  'status': 'Succeed',})
-            status_obj.status_response = stdout
-            status_obj.status_flag=True
-            status_obj.save()
-            
-            # to vex operation, need parse its response
-            _pasre_vex_components(status_obj)
-        else:
-            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': stderr[0:200]})
-            status_obj.status_response = stderr
-            status_obj.status_flag=False
-            status_obj.save()
+        from vbd.settings import sched
+        for status_obj in status_objs:
+            execute_time = datetime.now() + relativedelta(seconds=+3)
+            sched.add_date_job(_scrapy_component_status, execute_time, args=(status_obj, execute_time,))
+    except Exception, e:
+        print e
+    logger.debug("Finish to scrapy component status")
+
+def _scrapy_component_status(status_obj, execute_time):
+    status_command = status_obj.status_cmd
+    logger.debug("Start to scrapy by cmd at %s: %s" %(execute_time, status_command))
+    stdout, stderr, ex = None, None,None
+    if status_obj.status_cmd_type == SERVICE_STATUS_TYPE[0][0]:
+        # shell
+        stdout, stderr, ex = _execute_command(status_command)
+    else:
+        stdout, stderr, ex = _execute_command(status_command, status_obj.status_cmd_timeout, False)
     
-    json_data = json.dumps(status_list)
-    logger.info('Scrapy Status: %s' %(json_data))
-    return HttpResponse(json_data, content_type="application/json")  
+    if ex is not None:
+        #logger.error(type(ex))
+        logger.error("Scrapy error: cmd:%s, timestamp:%s, error:%s" %(status_command, execute_time, str(type(ex))[0:200]))
+        status_obj.status_response = str(ex)
+        status_obj.status_flag=False
+        status_obj.save()
+        
+    elif stderr is None or len(stderr) == 0:
+        # get right status response
+        logger.debug("Scrapy succeed: cmd:%s, timestamp:%s, message:%s" %(status_command, execute_time, stdout))
+        status_obj.status_response = stdout
+        status_obj.status_flag=True
+        status_obj.save()
+        
+        # to vex operation, need parse its response
+        _pasre_vex_components(status_obj)
+    else:
+        logger.error("Scrapy error: cmd:%s, timestamp:%s, error:%s" %(status_command, execute_time, str(stderr)[0:200]))
+        status_obj.status_response = stderr
+        status_obj.status_flag=False
+        status_obj.save()
 
 def _pasre_vex_components(status_obj):
     if VEXOperation.objects.filter(status=status_obj):
@@ -270,3 +275,47 @@ def _get_operation_command(op_id, op_tag, is_vex_operation):
     elif op_tag == "deploy":
         command = obj.deploy_command
     return command, obj
+
+'''
+#定时从数据库中找出所有有status url的model,然后抓取status
+def period_scrapy_component_status_by_status_cmd():
+    
+    status_objs = ServiceStatus.objects.filter(status_cmd__isnull=False, )
+    status_list = []
+    
+    for status_obj in status_objs:
+        status_command = status_obj.status_cmd
+        stdout, stderr, ex = None, None,None
+        if status_obj.status_cmd_type == SERVICE_STATUS_TYPE[0][0]:
+            # shell
+            stdout, stderr, ex = _execute_command(status_command)
+        else:
+            stdout, stderr, ex = _execute_command(status_command, status_obj.status_cmd_timeout, False)
+        
+        if ex is not None:
+            #logger.error(type(ex))
+            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': str(type(ex))[0:200]})
+            
+            if isinstance(ex, (ConnectionError, Timeout)):
+                status_obj.status_response = str(ex)
+                status_obj.status_flag=False
+                status_obj.save()
+            
+        elif stderr is None or len(stderr) == 0:
+            status_list.append({'cmd':status_command,  'status': 'Succeed',})
+            status_obj.status_response = stdout
+            status_obj.status_flag=True
+            status_obj.save()
+            
+            # to vex operation, need parse its response
+            _pasre_vex_components(status_obj)
+        else:
+            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': stderr[0:200]})
+            status_obj.status_response = stderr
+            status_obj.status_flag=False
+            status_obj.save()
+    
+    json_data = json.dumps(status_list)
+    logger.info('Scrapy Status: %s' %(json_data))
+    return HttpResponse(json_data, content_type="application/json")  
+'''
