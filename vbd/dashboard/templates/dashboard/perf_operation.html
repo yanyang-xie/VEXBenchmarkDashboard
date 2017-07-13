@@ -33,6 +33,46 @@
 </style>
 
 <script>
+	AmCharts.ready(function () {
+		var chartData = [{
+	        "date": "Thu Jul 13 2017 00:33:17 GMT+0800 (CST)",
+	        "value": 13
+	    }, {
+	        "date": "Thu Jul 13 2017 00:34:17 GMT+0800 (CST)",
+	        "value": 11
+	    }, {
+	        "date": "Thu Jul 13 2017 00:35:17 GMT+0800 (CST)",
+	        "value": 11
+	    }, {
+	        "date": "Thu Jul 13 2017 00:36:17 GMT+0800 (CST)",
+	        "value": 40
+	    }, {
+	        "date": "Thu Jul 13 2017 00:37:17 GMT+0800 (CST)",
+	        "value": 19
+	    }, {
+	        "date": "Thu Jul 13 2017 00:38:17 GMT+0800 (CST)",
+	        "value": 11
+	    }, {
+	        "date": "Thu Jul 13 2017 00:39:17 GMT+0800 (CST)",
+	        "value": 11
+	    }, {
+	        "date": "Thu Jul 13 2017 00:44:17 GMT+0800 (CST)",
+	        "value": 50
+	    }, {
+	        "date": "Thu Jul 13 2017 01:34:17 GMT+0800 (CST)",
+	        "value": 11
+	    }, {
+	        "date": "Thu Jul 13 2017 02:34:17 GMT+0800 (CST)",
+	        "value": 80
+	    }, {
+	        "date": "Thu Jul 13 2017 02:35:17 GMT+0800 (CST)",
+	        "value": 90
+	    }];
+		
+		drawLineChart("cpuChart", chartData, "date", "Cpu Usage", "value", "Usage")
+		
+	});
+
 	$(function() {
 	    $.fn.editable.defaults.mode = 'inline';
 	    $('#vex_operations a').editable({
@@ -171,6 +211,29 @@
 			 </tbody>
 		</table>
 	</div>
-	<div class="divider"><h5 class="page-header"></h5></div>
 </row>
+<div class="divider"><h5 class="page-header"></h5></div>
+<row class="col-sm-6 col-md-6">
+	<div class="panel panel-success">
+	    <div class="panel-heading">
+			<h3 class="panel-title">Cluster CPU Usage</h3>
+		</div>
+		<div class="panel-body">
+			<div id="cpuChart" class="thumbnail" style="width: auto; height: 350px;"></div>
+			<a href="#" onclick="window.open('http://www.sina.com.cn')">CPU Details in Grafana</a>
+		</div>
+    </div>
+</row>
+<row class="col-sm-6 col-md-6">
+	<div class="panel panel-success">
+	    <div class="panel-heading">
+			<h3 class="panel-title">Cluster Memory Usage</h3>
+		</div>
+		<div class="panel-body">
+			<div id="MemoryChart" class="thumbnail" style="width: auto; height: 350px;"></div>
+			<a href="#" onclick="window.open('http://www.baidu.com')">Memory Details in Grafana</a>
+		</div>
+  </div>
+</row>
+
 {% endblock%}
