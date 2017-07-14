@@ -139,7 +139,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'standard': {
-            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'format' : '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(levelname)s]- %(message)s',
             'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
     },
@@ -147,6 +147,14 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'request_handler': {
+            'level':'INFO',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILE,  
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 5,
+            'formatter':'standard',
         },
        'logfile': {
             'level':'INFO',
@@ -169,12 +177,17 @@ LOGGING = {
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['request_handler'],
             'level': 'ERROR',
             'propagate': True,
         },
         #注意: 这里要写你的模块的名称
         'dashboard': {
+            'handlers': ['logfile', 'console'],
+            'level': LOG_LEVEL,
+            'propagate': True,
+        },
+        'authen': {
             'handlers': ['logfile', 'console'],
             'level': LOG_LEVEL,
             'propagate': True,

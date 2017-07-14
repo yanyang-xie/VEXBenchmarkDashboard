@@ -31,7 +31,7 @@ urlpatterns = [
     # Benchmark result Home
     url(r'^result/(?P<test_type>.+)', result_views.benchmark_result, name='benchmark_result'),
     
-    # period scrapy component status
-    #url(r'^scrapy$', op_views.period_scrapy_component_status_by_status_cmd, name='scrapy_status'), 
-    
+    # cpu usage
+    url(r'^usage/cpu$', op_views.get_cpu_usages, name='cpu_usage'),
+    url(r'^usage/memory$', op_views.get_memory_usages, name='memory_usage'),
 ]

@@ -34,50 +34,8 @@
 
 <script>
 	AmCharts.ready(function () {
-		var chartData = [{
-	        "date": "Thu Jul 13 2017 00:33:17 GMT+0800 (CST)",
-	        "value": 13
-	    }, {
-	        "date": "Thu Jul 13 2017 00:34:17 GMT+0800 (CST)",
-	        "value": 11
-	    }, {
-	        "date": "Thu Jul 13 2017 00:35:17 GMT+0800 (CST)",
-	        "value": 11
-	    }, {
-	        "date": "Thu Jul 13 2017 00:36:17 GMT+0800 (CST)",
-	        "value": 40
-	    }, {
-	        "date": "Thu Jul 13 2017 00:37:17 GMT+0800 (CST)",
-	        "value": 19
-	    }, {
-	        "date": "Thu Jul 13 2017 00:38:17 GMT+0800 (CST)",
-	        "value": 11
-	    }, {
-	        "date": "Thu Jul 13 2017 00:39:17 GMT+0800 (CST)",
-	        "value": 11
-	    }, {
-	        "date": "Thu Jul 13 2017 00:44:17 GMT+0800 (CST)",
-	        "value": 50
-	    }, {
-	        "date": "Thu Jul 13 2017 01:34:17 GMT+0800 (CST)",
-	        "value": 11
-	    }, {
-	        "date": "Thu Jul 13 2017 02:34:17 GMT+0800 (CST)",
-	        "value": 80
-	    }, {
-	        "date": "Thu Jul 13 2017 02:35:17 GMT+0800 (CST)",
-	        "value": 90
-	    }];
-		
-		drawLineChart("cpuChart", chartData, "date", "Cpu Usage", "value", "Usage");
-		
-		var memory_chartData = [ {
-			  "category": "Wine left in the barrel",
-			  "value1": 30,
-			  "value2": 70
-			} ];
-		
-		drawCylinderGaugeChart("memoryChart", memory_chartData, "category", "value1", "value2");
+		getCPUUsage();
+		getMemoryUsage();
 	});
 	
 	$(function() {
@@ -100,12 +58,38 @@
 	    
 	    getVEXPerfTestStatus();
 	    setInterval("getVEXPerfTestStatus()", 3000);
+	    setInterval("getCPUUsage()", 2000);
+	    setInterval("getMemoryUsage()", 2000);
 	});
 	
 	function getVEXPerfTestStatus() {
 		url = "{% url 'fetch_compontent_status' %}";
 		getStatus(url);
     }
+	
+	//获取CPU或者memory usage
+	function getCPUUsage() {
+		url =  "{% url 'cpu_usage' %}";
+	    $.ajax({
+	        url: url,  
+	        type: 'Get',            
+	        success: function (data) {
+	        	drawLineChart("cpuChart", data, "date", "Cpu Usage", "value", "Usage");
+	        } 
+	    });  
+	}
+	
+	function getMemoryUsage(){
+		url =  "{% url 'memory_usage' %}";
+		$.ajax({
+	        url: url,  
+	        type: 'Get',            
+	        success: function (data) {
+	        	drawCylinderGaugeChart("memoryChart", data, "category", "value1", "value2");
+	        } 
+	    });
+		
+	}
 	
 </script>
 {% endblock%}

@@ -276,46 +276,37 @@ def _get_operation_command(op_id, op_tag, is_vex_operation):
         command = obj.deploy_command
     return command, obj
 
-'''
-#定时从数据库中找出所有有status url的model,然后抓取status
-def period_scrapy_component_status_by_status_cmd():
+# get cluster cpu usage info 
+def get_cpu_usages(requests):
+    #@todo: get data from prometheus
+    url = "";
+    data_list = []
+    data_list.append({"date": "Thu Jul 13 2017 00:33:17 GMT+0800 (CST)", "value": 1 });
+    data_list.append({"date": "Thu Jul 13 2017 00:34:17 GMT+0800 (CST)", "value": 7 });
+    data_list.append({"date": "Thu Jul 13 2017 00:35:17 GMT+0800 (CST)", "value": 13 });
+    data_list.append({"date": "Thu Jul 13 2017 00:36:17 GMT+0800 (CST)", "value": 6 });
+    data_list.append({"date": "Thu Jul 13 2017 00:33:17 GMT+0800 (CST)", "value": 40 });
+    data_list.append({"date": "Thu Jul 13 2017 00:38:17 GMT+0800 (CST)", "value": 60 });
+    data_list.append({"date": "Thu Jul 13 2017 00:40:17 GMT+0800 (CST)", "value": 20 });
+    data_list.append({"date": "Thu Jul 13 2017 00:45:17 GMT+0800 (CST)", "value": 46 });
+    data_list.append({"date": "Thu Jul 13 2017 00:48:17 GMT+0800 (CST)", "value": 55 });
     
-    status_objs = ServiceStatus.objects.filter(status_cmd__isnull=False, )
-    status_list = []
+    json_data = json.dumps(data_list)
+    logger.debug('CPU Usage: %s' %(json_data))
+    return HttpResponse(json_data, content_type="application/json")
+
+def get_memory_usages(requests):
+    #@todo: get data from prometheus
+    url = "";
+    data_list = []
+    data_list.append({
+              "category": "Wine left in the barrel",
+              "value1": 30,
+              "value2": 70
+            });
     
-    for status_obj in status_objs:
-        status_command = status_obj.status_cmd
-        stdout, stderr, ex = None, None,None
-        if status_obj.status_cmd_type == SERVICE_STATUS_TYPE[0][0]:
-            # shell
-            stdout, stderr, ex = _execute_command(status_command)
-        else:
-            stdout, stderr, ex = _execute_command(status_command, status_obj.status_cmd_timeout, False)
-        
-        if ex is not None:
-            #logger.error(type(ex))
-            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': str(type(ex))[0:200]})
-            
-            if isinstance(ex, (ConnectionError, Timeout)):
-                status_obj.status_response = str(ex)
-                status_obj.status_flag=False
-                status_obj.save()
-            
-        elif stderr is None or len(stderr) == 0:
-            status_list.append({'cmd':status_command,  'status': 'Succeed',})
-            status_obj.status_response = stdout
-            status_obj.status_flag=True
-            status_obj.save()
-            
-            # to vex operation, need parse its response
-            _pasre_vex_components(status_obj)
-        else:
-            status_list.append({'cmd':status_command, 'status': 'Failed', 'error_message': stderr[0:200]})
-            status_obj.status_response = stderr
-            status_obj.status_flag=False
-            status_obj.save()
-    
-    json_data = json.dumps(status_list)
-    logger.info('Scrapy Status: %s' %(json_data))
-    return HttpResponse(json_data, content_type="application/json")  
-'''
+    json_data = json.dumps(data_list)
+    logger.debug('CPU Usage: %s' %(json_data))
+    return HttpResponse(json_data, content_type="application/json")
+
+

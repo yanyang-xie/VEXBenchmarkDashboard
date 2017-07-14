@@ -125,7 +125,7 @@ function drawLineChart(chart_id, chart_data, graph_category_field, graph_categor
 		    "balloonText": "<div style='margin:1px; font-size:12px;'>" + graph_balloon_title +": <b>[[value]]</b></div>"
 		  }],
 		  "chartCursor": {
-		    "categoryBalloonDateFormat": "JJ:NN, DD MMMM",
+		    "categoryBalloonDateFormat": "JJ:NN, DD MMMM",//在气球上显示的日期格式,https://www.amcharts.com/kbase/formatting-dates/
 		    "cursorPosition": "mouse",
 		    "valueLineEnabled": true,
 		    "valueLineBalloonEnabled": true,
