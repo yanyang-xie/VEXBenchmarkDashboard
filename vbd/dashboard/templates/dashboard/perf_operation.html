@@ -69,10 +69,17 @@
 	        "value": 90
 	    }];
 		
-		drawLineChart("cpuChart", chartData, "date", "Cpu Usage", "value", "Usage")
+		drawLineChart("cpuChart", chartData, "date", "Cpu Usage", "value", "Usage");
 		
+		var memory_chartData = [ {
+			  "category": "Wine left in the barrel",
+			  "value1": 30,
+			  "value2": 70
+			} ];
+		
+		drawCylinderGaugeChart("memoryChart", memory_chartData, "category", "value1", "value2");
 	});
-
+	
 	$(function() {
 	    $.fn.editable.defaults.mode = 'inline';
 	    $('#vex_operations a').editable({
@@ -230,7 +237,7 @@
 			<h3 class="panel-title">Cluster Memory Usage</h3>
 		</div>
 		<div class="panel-body">
-			<div id="MemoryChart" class="thumbnail" style="width: auto; height: 350px;"></div>
+			<div id="memoryChart" class="thumbnail" style="width: auto; height: 350px;"></div>
 			<a href="#" onclick="window.open('http://www.baidu.com')">Memory Details in Grafana</a>
 		</div>
   </div>
