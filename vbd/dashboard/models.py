@@ -160,6 +160,7 @@ class BasicOperation(models.Model):
     description = models.CharField(max_length=1024, blank=True, null=True)
     status = models.OneToOneField(ServiceStatus, blank=True, null=True)
     command_timeout = models.IntegerField(blank=False, null=False, default=120)
+    is_kube_command = models.BooleanField(default=False)
     
     def delete(self, using=None):
         if self.status is not None:
@@ -170,8 +171,8 @@ class BasicOperation(models.Model):
         abstract = True
         
     def __unicode__(self):
-        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status:{}'\
-                .format(self.id, self.name, self.start_command, self.stop_command, self.status)
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status:{}, is_kube_command:{}'\
+                .format(self.id, self.name, self.start_command, self.stop_command, self.status, self.is_kube_command)
 
 class Operation(BasicOperation):
     group = models.ForeignKey(OperationGroup,blank=True, null=True)

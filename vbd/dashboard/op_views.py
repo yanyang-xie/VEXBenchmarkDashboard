@@ -12,7 +12,8 @@ import requests
 
 from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion, \
     CHOICES_TYPE, VEXPerfTestOperation, ServiceStatus, SERVICE_STATUS_TYPE
-from dashboard.utils import use_global_deploy_version
+from dashboard.utility import fab_util
+from dashboard.utils import use_global_deploy_version, get_kube_host
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +89,7 @@ def execute_cmd(request):
                 version = obj.deploy_version
             command += ' -v %s' %(version.version)
         
-        stdout, stderr, ex = _execute_command(command, obj.command_timeout, True)
+        stdout, stderr, ex = _execute_command(command, obj.command_timeout, True, obj.is_kube_command)
         if stderr is not None and len(stderr) > 0:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr).replace('\n', ''))})
@@ -227,9 +228,19 @@ def fetch_component_status(request):
     logger.debug('Fetch Operation status: %s' %(json_data))
     return HttpResponse(json_data, content_type="application/json")
 
-def _execute_command(cmd, timeout=30, is_shell=True):
+def _execute_command(cmd, timeout=30, is_shell=True, is_remote=False):
     try:
-        if is_shell is True:
+        if is_remote is True:
+            try:
+                kube_host = get_kube_host()
+                
+                from vbd.settings import kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port
+                print kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port
+                result = fab_util.fab_run_single_remote_command(cmd, kube_host, kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port)
+                return result, None, None
+            except Exception, e:
+                return None, None, e
+        elif is_shell is True:
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
             stdout, stderr = process.stdout.readlines(), process.stderr.readlines() 
             

@@ -17,3 +17,10 @@ def use_global_deploy_version():
     if global_setting.count() > 0:
         return global_setting[0].use_default_version
 
+def get_kube_host():
+    global_setting = VEXGolbalSettings.objects.all()
+    if global_setting.count() > 0:
+        return global_setting[0].kubectl_ip_address
+    else:
+        return None
+
