@@ -212,6 +212,7 @@ class VEXPerfTestOperation(BasicOperation):
 class VEXGolbalSettings(models.Model):
     kubectl_ip_address = models.GenericIPAddressField(max_length=100, blank=True, null=True)
     grafana_http_address = models.CharField(max_length=128, blank=True, null=True)
+    prometheus_http_address = models.CharField(max_length=128, blank=True, null=True)
     
     # whether all the vex components use same version
     use_default_version = models.BooleanField(default=True)
@@ -220,4 +221,4 @@ class VEXGolbalSettings(models.Model):
         db_table = 'vex_global_settings'
     
     def __unicode__(self):
-        return 'kubectl_address:{}, grafana_address:{}, use_default_version:{}'.format(self.kubectl_ip_address, self.grafana_http_address, self.use_default_version)
+        return 'kubectl_address:{}, grafana_address:{},prometheus_http_address:{}, use_default_version:{}'.format(self.kubectl_ip_address, self.grafana_http_address, self.prometheus_http_address, self.use_default_version)

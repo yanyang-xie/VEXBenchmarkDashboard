@@ -24,3 +24,17 @@ def get_kube_host():
     else:
         return None
 
+def get_grafana_server():
+    global_setting = VEXGolbalSettings.objects.all()
+    if global_setting.count() > 0:
+        return global_setting[0].grafana_http_address
+    else:
+        return None
+
+def get_prometheus_server():
+    global_setting = VEXGolbalSettings.objects.all()
+    if global_setting.count() > 0:
+        return global_setting[0].prometheus_server_address
+    else:
+        return None
+

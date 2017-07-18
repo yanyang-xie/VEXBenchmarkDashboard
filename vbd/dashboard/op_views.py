@@ -14,7 +14,8 @@ from dashboard import constant
 from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion, \
     CHOICES_TYPE, VEXPerfTestOperation, ServiceStatus, SERVICE_STATUS_TYPE
 from dashboard.utility import fab_util
-from dashboard.utility.prometheus_util import get_cpu_usage_from_prometheus
+from dashboard.utility.prometheus_util import get_cpu_usage_from_prometheus, \
+    get_memory_usage_from_prometheus
 from dashboard.utils import use_global_deploy_version, get_kube_host
 
 
@@ -313,12 +314,12 @@ def get_cpu_usages(requests):
 
 def get_memory_usages(requests):
     #@todo: get data from prometheus
-    url = "";
+    memory_usage = get_memory_usage_from_prometheus(constant.prometheus_server)
     data_list = []
     data_list.append({
-              "category": "Wine left in the barrel",
-              "value1": 30,
-              "value2": 70
+              "category": "Cluster memory usage",
+              "value1": memory_usage,
+              "value2": 100 - memory_usage
             });
     
     json_data = json.dumps(data_list)
