@@ -16,7 +16,8 @@ from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion
 from dashboard.utility import fab_util
 from dashboard.utility.prometheus_util import get_cpu_usage_from_prometheus, \
     get_memory_usage_from_prometheus
-from dashboard.utils import use_global_deploy_version, get_kube_host
+from dashboard.utils import use_global_deploy_version, get_kube_host, \
+    get_grafana_server
 
 
 logger = logging.getLogger(__name__)
@@ -27,6 +28,7 @@ def benchmark_operation(request):
     
     vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
     context.update({'vex_operation_list': vex_operation_list,})
+    context.update({'grafana_http_address':get_grafana_server})
     logger.debug('perf_op_index context: %s' %(context))
     
     return render_to_response('dashboard/perf_operation.html', context)

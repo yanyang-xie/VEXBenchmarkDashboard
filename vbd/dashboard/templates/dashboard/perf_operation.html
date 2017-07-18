@@ -57,9 +57,9 @@
 	    });
 	    
 	    getVEXPerfTestStatus();
-	    setInterval("getVEXPerfTestStatus()", 3000);
-	    setInterval("getCPUUsage()", 2000);
-	    setInterval("getMemoryUsage()", 2000);
+	    setInterval("getVEXPerfTestStatus()", 60000);
+	    setInterval("getCPUUsage()", 60000);
+	    setInterval("getMemoryUsage()", 60000);
 	});
 	
 	function getVEXPerfTestStatus() {
@@ -211,7 +211,7 @@
 		</div>
 		<div class="panel-body">
 			<div id="cpuChart" class="thumbnail" style="width: auto; height: 350px;"></div>
-			<a href="#" onclick="window.open('http://www.sina.com.cn')">CPU Details in Grafana</a>
+			<a href="#" onclick="window.open('{{grafana_http_address}}')">CPU Details in Grafana</a>
 		</div>
     </div>
 </row>
@@ -222,7 +222,7 @@
 		</div>
 		<div class="panel-body">
 			<div id="memoryChart" class="thumbnail" style="width: auto; height: 350px;"></div>
-			<a href="#" onclick="window.open('http://www.baidu.com')">Memory Details in Grafana</a>
+			<a href="#" onclick="window.open('{{grafana_http_address}}')">Memory Details in Grafana</a>
 		</div>
   </div>
 </row>
