@@ -10,10 +10,13 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 import requests
 
+from dashboard import constant
 from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion, \
     CHOICES_TYPE, VEXPerfTestOperation, ServiceStatus, SERVICE_STATUS_TYPE
 from dashboard.utility import fab_util
+from dashboard.utility.prometheus_util import get_cpu_usage_from_prometheus
 from dashboard.utils import use_global_deploy_version, get_kube_host
+
 
 logger = logging.getLogger(__name__)
 
@@ -290,18 +293,20 @@ def _get_operation_command(op_id, op_tag, is_vex_operation):
 # get cluster cpu usage info 
 def get_cpu_usages(requests):
     #@todo: get data from prometheus
-    url = "";
-    data_list = []
-    data_list.append({"date": "Thu Jul 13 2017 00:33:17 GMT+0800 (CST)", "value": 1 });
-    data_list.append({"date": "Thu Jul 13 2017 00:34:17 GMT+0800 (CST)", "value": 7 });
-    data_list.append({"date": "Thu Jul 13 2017 00:35:17 GMT+0800 (CST)", "value": 13 });
-    data_list.append({"date": "Thu Jul 13 2017 00:36:17 GMT+0800 (CST)", "value": 6 });
-    data_list.append({"date": "Thu Jul 13 2017 00:33:17 GMT+0800 (CST)", "value": 40 });
-    data_list.append({"date": "Thu Jul 13 2017 00:38:17 GMT+0800 (CST)", "value": 60 });
-    data_list.append({"date": "Thu Jul 13 2017 00:40:17 GMT+0800 (CST)", "value": 20 });
-    data_list.append({"date": "Thu Jul 13 2017 00:45:17 GMT+0800 (CST)", "value": 46 });
-    data_list.append({"date": "Thu Jul 13 2017 00:48:17 GMT+0800 (CST)", "value": 55 });
+    data_list = get_cpu_usage_from_prometheus(constant.prometheus_server)
     
+    '''
+    data_list = []
+    data_list.append({"date": "Thu Jul 13 2017 00:33:17 GMT+0800 (CST)", "value": 2.37 });
+    data_list.append({"date": "Thu Jul 13 2017 00:34:17 GMT+0800 (CST)", "value": 2.5 });
+    data_list.append({"date": "Thu Jul 13 2017 00:35:17 GMT+0800 (CST)", "value": 2.43 });
+    data_list.append({"date": "Thu Jul 13 2017 00:36:17 GMT+0800 (CST)", "value": 2.73 });
+    data_list.append({"date": "Thu Jul 13 2017 00:37:17 GMT+0800 (CST)", "value": 2.63 });
+    data_list.append({"date": "Thu Jul 13 2017 00:38:17 GMT+0800 (CST)", "value": 2.43 });
+    data_list.append({"date": "Thu Jul 13 2017 00:40:17 GMT+0800 (CST)", "value": 2.73 });
+    data_list.append({"date": "Thu Jul 13 2017 00:45:17 GMT+0800 (CST)", "value": 2.4 });
+    data_list.append({"date": "Thu Jul 13 2017 00:48:17 GMT+0800 (CST)", "value": 2.33 });
+    '''
     json_data = json.dumps(data_list)
     logger.debug('CPU Usage: %s' %(json_data))
     return HttpResponse(json_data, content_type="application/json")
