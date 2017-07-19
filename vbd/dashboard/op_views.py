@@ -2,6 +2,7 @@
 from datetime import datetime
 import json
 import logging
+from os.path import os
 import subprocess
 
 from dateutil.relativedelta import relativedelta
@@ -10,21 +11,21 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 import requests
 
-from dashboard import constant
 from dashboard.models import OperationGroup, VEXOperation, Operation, VEXVersion, \
     CHOICES_TYPE, VEXPerfTestOperation, ServiceStatus, SERVICE_STATUS_TYPE
+
 from dashboard.utility import fab_util
 from dashboard.utility.prometheus_util import get_cpu_usage_from_prometheus, \
     get_memory_usage_from_prometheus
 from dashboard.utils import use_global_deploy_version, get_kube_host, \
-    get_grafana_server, get_prometheus_server
+    get_grafana_server, get_prometheus_server, generate_user_context
 
 
 logger = logging.getLogger(__name__)
 
 def benchmark_operation(request):
     context = {'active_menu':'benchmark_operation'}
-    #context.update(generate_user_context(request))
+    context.update(generate_user_context(request))
     
     vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
     context.update({'vex_operation_list': vex_operation_list,})
@@ -130,7 +131,7 @@ def execute_cmd(request):
 # Index of environment settings
 def env_setting(request):
     context = {'active_menu':'env_setting'}
-    #context.update(generate_user_context(request))
+    context.update(generate_user_context(request))
     
     vex_operation_list = VEXOperation.objects.all()
     if use_global_deploy_version() is True :
@@ -238,10 +239,18 @@ def _execute_command(cmd, timeout=30, is_shell=True, is_remote=False):
     try:
         if is_remote is True:
             try:
-                kube_host = get_kube_host()
+                kube_host, kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port = get_kube_host()
+                if kube_host is None:
+                    raise Exception('Kubernetes host is not configured')
                 
-                from vbd.settings import kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port
-                print kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port
+                if kube_server_ssh_key_file is None or kube_server_ssh_key_file.name is None or kube_server_ssh_key_file.name=='':
+                    raise Exception('Kubernetes ssh key file is not configured')
+                else:
+                    from vbd.settings import MEDIA_ROOT
+                    kube_server_ssh_key_file = MEDIA_ROOT + os.sep +kube_server_ssh_key_file.name
+                
+                #from vbd.settings import kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port
+                #print kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port
                 result = fab_util.fab_run_single_remote_command(cmd, kube_host, kube_server_ssh_key_file,kube_server_ssh_user,kube_server_ssh_port)
                 return result, None, None
             except Exception, e:

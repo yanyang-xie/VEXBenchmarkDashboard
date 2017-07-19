@@ -96,11 +96,11 @@ function cancel(){
                         <div class="form-group">
                             <label for="id_kubectl_ssh_key_file_label" class="col-md-3 control-label">{{ form.kubectl_ssh_key_file.label }}</label>
                             <div class="col-md-9">
-                            	<input id="id_{{ form.kubectl_ssh_key_file.name }}" name="{{ form.kubectl_ssh_key_file.name }}" autofocus disabled type="file" class="file" value="{{ form.kubectl_ssh_key_file.value }}>
+                            	<input id="id_{{ form.kubectl_ssh_key_file.name }}" name="{{ form.kubectl_ssh_key_file.name }}" autofocus disabled type="file" class="file" value="{{ form.kubectl_ssh_key_file.value.name }}">
                                 {% if form.errors.kubectl_ssh_key_file %}
                                 	<div class="has-warning"><label class="control-label" for="inputWarning">{{form.errors.kubectl_ssh_key_file}}</label></div>
                                 {% else %}
-                                	<p class="help-block"> {{form.kubectl_ssh_key_file.help_text}} </p>
+                                	<p class="help-block">{{form.kubectl_ssh_key_file.help_text}} </p>
                                 {% endif %}
                             </div>
                         </div>

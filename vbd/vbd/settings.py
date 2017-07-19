@@ -246,6 +246,6 @@ sched.add_interval_job(period_scrapy_component_status, seconds=30)
 sched.start()
 
 #kubenetes hosts
-kube_server_ssh_user='root'
-kube_server_ssh_port = 22
-kube_server_ssh_key_file = '/Users/xieyanyang/work/ttbj/ttbj-keypair.pem'
+#kube_server_ssh_user='root'
+#kube_server_ssh_port = 22
+#kube_server_ssh_key_file = '/Users/xieyanyang/work/ttbj/ttbj-keypair.pem'

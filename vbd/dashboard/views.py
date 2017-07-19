@@ -8,14 +8,14 @@ from django.shortcuts import render, render_to_response
 from dashboard.forms import VEXGolbalSettingsFrom, KubernetesSettingsFrom
 from dashboard.models import VEXGolbalSettings, \
     KubernetesSettings, kube_file_folder
+from dashboard.utils import generate_user_context
 
 
 logger = logging.getLogger(__name__)
 
 # Create your views here.
 def homepage(request):
-    #context = generate_user_context(request)
-    context = {}
+    context = generate_user_context(request)
     return render(request, 'dashboard/homepage.html', context)
 
 def page_not_found(request):
@@ -25,14 +25,12 @@ def page_error(request):
     return render_to_response('500.html')
 
 def about(request):
-    #context = generate_user_context(request)
-    context = {}
+    context = generate_user_context(request)
     return render(request, 'about.html', context)
 
 @login_required 
 def global_settings(request):
-    #context = generate_user_context(request)
-    context = {}
+    context = generate_user_context(request)
     if request.method == 'POST':
         form = VEXGolbalSettingsFrom(request.POST)
         if form.is_valid():
@@ -61,28 +59,17 @@ def global_settings(request):
 
 @login_required 
 def kubernetes_settings(request):
-    #context = generate_user_context(request)
-    context = {}
+    context = generate_user_context(request)
     if request.method == 'POST':
         form = KubernetesSettingsFrom(request.POST, request.FILES)
         if form.is_valid():
             KubernetesSettings.objects.all().delete()
-            '''
-            key_file = request.FILES['kubectl_ssh_key_file']
             
-            #store key file
+            #需要删除原来的key文件, 否则会产生一个加随机数的文件
             from vbd.settings import MEDIA_ROOT
-            store_dir = MEDIA_ROOT + os.sep + kube_file_folder
-            filename = os.path.join(store_dir, key_file.name);
-            
-            if os.path.exists(filename): 
-                os.remove(filename)
-            
-            fobj = open(filename,'wb');
-            for chrunk in key_file.chunks():
-                fobj.write(chrunk);
-            fobj.close();
-            '''
+            kube_server_ssh_key_file = MEDIA_ROOT + os.sep + kube_file_folder + os.sep + form.cleaned_data.get('kubectl_ssh_key_file').name
+            if os.path.exists(kube_server_ssh_key_file): 
+                os.remove(kube_server_ssh_key_file)
             
             form.save()
         context['form'] = form

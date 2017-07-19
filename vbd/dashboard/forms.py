@@ -47,7 +47,7 @@ class KubernetesSettingsFrom(ModelForm):
     
     kubectl_ip_address = forms.GenericIPAddressField(max_length=128, help_text=u'Internal IP Address of Kubernete master',
                                                      error_messages={'max_length': u'Grafana http address is too long(<128)'})
-    kubectl_ssh_key_file = forms.FileField(help_text=u'SSH key file of Kubernete master', error_messages={}, required=False, widget=forms.FileInput())
+    kubectl_ssh_key_file = forms.FileField(help_text=u'SSH key file of Kubernete master', error_messages={}, required=True, widget=forms.FileInput())
     
     kubectl_ssh_user = forms.CharField(max_length=128, help_text=u'SSH user Kubernete master',
                                                      error_messages={'max_length': u'User is too long(<128)'})
