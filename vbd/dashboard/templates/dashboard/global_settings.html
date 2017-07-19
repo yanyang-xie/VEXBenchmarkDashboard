@@ -5,14 +5,12 @@
 {% block header %}
 <script>
 
-var tmp_kubectl_ip_address = "";
 var tmp_grafana_http_address = "";
 var tmp_prometheus_http_address = "";
 var tmp_use_default_version = "";
 
 $(function() {
 	{% if form.errors %}
-		$("#id_kubectl_ip_address").attr("disabled",false);
 		$("#id_grafana_http_address").attr("disabled",false);
 		$("#id_prometheus_http_address").attr("disabled",false);
 		$("#id_use_default_version").attr("disabled",false);
@@ -21,7 +19,6 @@ $(function() {
 		$("#save_button").show();
 		$("#cancel_button").show();
 		
-		tmp_kubectl_ip_address = "{{ form.kubectl_ip_address.value }}";
 		tmp_grafana_http_address = "{{ form.grafana_http_address.value }}";
 		tmp_prometheus_http_address = "{{ form.prometheus_http_address.value }}";
 		tmp_use_default_version = "{{ form.use_default_version.value }}";
@@ -33,12 +30,10 @@ $(function() {
 });
 
 function edit(){
-	$("#id_kubectl_ip_address").attr("disabled",false);
 	$("#id_grafana_http_address").attr("disabled",false);
 	$("#id_prometheus_http_address").attr("disabled",false);
 	$("#id_use_default_version").attr("disabled",false);
 	
-	tmp_kubectl_ip_address = $("#id_kubectl_ip_address").val();
 	tmp_grafana_http_address = $("#id_grafana_http_address").val();
 	tmp_prometheus_http_address = $("#id_prometheus_http_address").val();
 	tmp_use_default_version = $("#id_use_default_version").val();
@@ -49,7 +44,6 @@ function edit(){
 }
 
 function cancel(){
-	$("#id_kubectl_ip_address").val(tmp_kubectl_ip_address);
 	$("#id_grafana_http_address").val(tmp_grafana_http_address);
 	$("#id_prometheus_http_address").val(tmp_prometheus_http_address);
 	
@@ -59,7 +53,6 @@ function cancel(){
 		$("#id_use_default_version").prop("checked", false);
 	}
 	
-	$("#id_kubectl_ip_address").attr("disabled",true);
 	$("#id_grafana_http_address").attr("disabled",true);
 	$("#id_prometheus_http_address").attr("disabled",true);
 	$("#id_use_default_version").attr("disabled",true);
@@ -82,17 +75,6 @@ function cancel(){
                 <div class="panel-body">
                     <form method="POST" class="form-horizontal">
                         {% csrf_token %}
-                        <div class="form-group">
-                            <label for="id_kubectl_ip_address_label" class="col-md-3 control-label">{{ form.kubectl_ip_address.label }}</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="id_{{ form.kubectl_ip_address.name }}" name="{{ form.kubectl_ip_address.name }}" autofocus disabled value="{{ form.kubectl_ip_address.value }}">
-                                {% if form.errors.kubectl_ip_address %}
-                                	<div class="has-warning"><label class="control-label" for="inputWarning"> {{form.errors.kubectl_ip_address}} </label></div>
-                                {% else %}
-                                	<p class="help-block"> {{form.kubectl_ip_address.help_text}} </p>
-                                {% endif %}
-                             </div>
-                        </div>
                         <div class="form-group">
                             <label for="id_grafana_http_address_label" class="col-md-3 control-label">{{ form.grafana_http_address.label }}</label>
                             <div class="col-md-9">

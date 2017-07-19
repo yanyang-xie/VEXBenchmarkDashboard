@@ -210,7 +210,6 @@ class VEXPerfTestOperation(BasicOperation):
         return 'id:{}, name:{}, result_collect_command:{}, perf_config:[{}]'.format(self.id, self.name, self.result_collect_command, self.perf_config)
 
 class VEXGolbalSettings(models.Model):
-    kubectl_ip_address = models.GenericIPAddressField(max_length=100, blank=True, null=True)
     grafana_http_address = models.CharField(max_length=128, blank=True, null=True)
     prometheus_http_address = models.CharField(max_length=128, blank=True, null=True)
     
@@ -221,7 +220,7 @@ class VEXGolbalSettings(models.Model):
         db_table = 'vex_global_settings'
     
     def __unicode__(self):
-        return 'kubectl_address:{}, grafana_address:{},prometheus_http_address:{}, use_default_version:{}'.format(self.kubectl_ip_address, self.grafana_http_address, self.prometheus_http_address, self.use_default_version)
+        return 'grafana_http_address:{}, prometheus_http_address:{}, use_default_version:{}'.format(self.grafana_http_address, self.prometheus_http_address, self.use_default_version)
 
 kube_file_folder='kube_keyfile/'    
 class KubernetesSettings(models.Model):
