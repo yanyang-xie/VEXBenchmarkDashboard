@@ -20,11 +20,13 @@ class VEXGolbalSettingsFrom(ModelForm):
     
     def clean_grafana_http_address(self):
         grafana_http_address = self.cleaned_data.get('grafana_http_address')
+        if grafana_http_address == '':
+            return ''
+        
         if grafana_http_address.find('http') != 0:
             raise forms.ValidationError(u'Grafana address should be a http URL')
         return grafana_http_address
     
-    '''
     def clean_prometheus_http_address(self):
         prometheus_http_address = self.cleaned_data.get('prometheus_http_address')
         if prometheus_http_address == '':
@@ -33,7 +35,7 @@ class VEXGolbalSettingsFrom(ModelForm):
         if prometheus_http_address.find('http') != 0:
             raise forms.ValidationError(u'Prometheus address should be a http URL')
         return prometheus_http_address
-    '''
+
     def clean_use_default_version(self):
         if self.cleaned_data.get('use_default_version') is False:
             return False

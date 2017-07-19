@@ -34,7 +34,7 @@ def get_grafana_server():
 def get_prometheus_server():
     global_setting = VEXGolbalSettings.objects.all()
     if global_setting.count() > 0:
-        return global_setting[0].prometheus_server_address
+        return global_setting[0].prometheus_http_address
     else:
         return None
 

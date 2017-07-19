@@ -7,20 +7,23 @@
 
 var tmp_kubectl_ip_address = "";
 var tmp_grafana_http_address = "";
+var tmp_prometheus_http_address = "";
 var tmp_use_default_version = "";
 
 $(function() {
 	{% if form.errors %}
 		$("#id_kubectl_ip_address").attr("disabled",false);
 		$("#id_grafana_http_address").attr("disabled",false);
+		$("#id_prometheus_http_address").attr("disabled",false);
 		$("#id_use_default_version").attr("disabled",false);
 	
 		$("#edit_button").hide();
 		$("#save_button").show();
-		$("#cancel_button").hide();
+		$("#cancel_button").show();
 		
 		tmp_kubectl_ip_address = "{{ form.kubectl_ip_address.value }}";
 		tmp_grafana_http_address = "{{ form.grafana_http_address.value }}";
+		tmp_prometheus_http_address = "{{ form.prometheus_http_address.value }}";
 		tmp_use_default_version = "{{ form.use_default_version.value }}";
 	{% endif %}
 	
@@ -32,10 +35,12 @@ $(function() {
 function edit(){
 	$("#id_kubectl_ip_address").attr("disabled",false);
 	$("#id_grafana_http_address").attr("disabled",false);
+	$("#id_prometheus_http_address").attr("disabled",false);
 	$("#id_use_default_version").attr("disabled",false);
 	
 	tmp_kubectl_ip_address = $("#id_kubectl_ip_address").val();
 	tmp_grafana_http_address = $("#id_grafana_http_address").val();
+	tmp_prometheus_http_address = $("#id_prometheus_http_address").val();
 	tmp_use_default_version = $("#id_use_default_version").val();
 	
 	$("#edit_button").hide();
@@ -46,6 +51,7 @@ function edit(){
 function cancel(){
 	$("#id_kubectl_ip_address").val(tmp_kubectl_ip_address);
 	$("#id_grafana_http_address").val(tmp_grafana_http_address);
+	$("#id_prometheus_http_address").val(tmp_prometheus_http_address);
 	
 	if (tmp_use_default_version=="True"){
 		$("#id_use_default_version").prop("checked", true);
@@ -55,6 +61,7 @@ function cancel(){
 	
 	$("#id_kubectl_ip_address").attr("disabled",true);
 	$("#id_grafana_http_address").attr("disabled",true);
+	$("#id_prometheus_http_address").attr("disabled",true);
 	$("#id_use_default_version").attr("disabled",true);
 	
 	$("#edit_button").show();
@@ -99,6 +106,18 @@ function cancel(){
                         </div>
                         
                         <div class="form-group">
+                            <label for="id_prometheus_http_address_label" class="col-md-3 control-label">{{ form.prometheus_http_address.label }}</label>
+                            <div class="col-md-9">
+                            	<input type="text" class="form-control" id="id_{{ form.prometheus_http_address.name }}" name="{{ form.prometheus_http_address.name }}" autofocus disabled value="{{ form.prometheus_http_address.value }}">
+                                {% if form.errors.prometheus_http_address %}
+                                	<div class="has-warning"><label class="control-label" for="inputWarning">{{form.errors.prometheus_http_address}}</label></div>
+                                {% else %}
+                                	<p class="help-block"> {{form.prometheus_http_address.help_text}} </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="id_use_default_version_label" class="col-md-3 control-label">{{ form.use_default_version.label }}</label>
                             <div class="col-md-9">
                             	<input type="checkbox" class="form-control" 
@@ -115,7 +134,7 @@ function cancel(){
                         <div class="col-md-5 col-md-offset-3">
                             <button type="button" id="edit_button" class="btn btn-success" value="edit" onclick="edit()">Edit</button>
                             <button type="submit" id="save_button" class="btn btn-success" value="save" style="display:none;">Save</button>
-                            <button type="button" id="cancel_button" class="btn btn-success" value="edit" style="display:none;" onclick="cancel()">Cancel</button>
+                            <button type="button" id="cancel_button" class="btn btn-success" value="cancel" style="display:none;" onclick="cancel()">Cancel</button>
                         </div>
                     </form>
                 </div>

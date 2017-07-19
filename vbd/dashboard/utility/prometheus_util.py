@@ -22,7 +22,8 @@ def prometheus_query_range(prometheus_server, query, time_window=-1):
         else:
             return None
     except:
-        print 'timeout'
+        print 'Timeout to connect prometheus server'
+        return None
     
 def get_memory_usage_from_prometheus(prometheus_server):
     query = 'sum (container_memory_working_set_bytes{id="/",kubernetes_io_hostname=~".*"}) / sum (machine_memory_bytes{kubernetes_io_hostname=~".*"}) * 100'

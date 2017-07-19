@@ -17,7 +17,7 @@ from dashboard.utility import fab_util
 from dashboard.utility.prometheus_util import get_cpu_usage_from_prometheus, \
     get_memory_usage_from_prometheus
 from dashboard.utils import use_global_deploy_version, get_kube_host, \
-    get_grafana_server
+    get_grafana_server, get_prometheus_server
 
 
 logger = logging.getLogger(__name__)
@@ -296,7 +296,7 @@ def _get_operation_command(op_id, op_tag, is_vex_operation):
 # get cluster cpu usage info 
 def get_cpu_usages(requests):
     #@todo: get data from prometheus
-    data_list = get_cpu_usage_from_prometheus(constant.prometheus_server)
+    data_list = get_cpu_usage_from_prometheus(get_prometheus_server())
     
     '''
     data_list = []
@@ -316,7 +316,7 @@ def get_cpu_usages(requests):
 
 def get_memory_usages(requests):
     #@todo: get data from prometheus
-    memory_usage = get_memory_usage_from_prometheus(constant.prometheus_server)
+    memory_usage = get_memory_usage_from_prometheus(get_prometheus_server())
     data_list = []
     data_list.append({
               "category": "Cluster memory usage",
