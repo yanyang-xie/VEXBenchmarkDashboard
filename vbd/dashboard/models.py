@@ -222,3 +222,17 @@ class VEXGolbalSettings(models.Model):
     
     def __unicode__(self):
         return 'kubectl_address:{}, grafana_address:{},prometheus_http_address:{}, use_default_version:{}'.format(self.kubectl_ip_address, self.grafana_http_address, self.prometheus_http_address, self.use_default_version)
+
+kube_file_folder='kube_keyfile/'    
+class KubernetesSettings(models.Model):
+    kubectl_ip_address = models.GenericIPAddressField(max_length=100, blank=False, null=False, default='')
+    kubectl_ssh_key_file = models.FileField(upload_to=kube_file_folder, blank=False, null=False, default='')
+    kubectl_ssh_user = models.CharField(max_length=128, blank=False, null=False, default='root')
+    kubectl_ssh_port = models.IntegerField(blank=False, null=False, default=22)
+    
+    class Meta:
+        db_table = 'kubernetes_settings'
+    
+    def __unicode__(self):
+        return 'kubectl_address:{}, kubectl_ssh_key_file:{},kubectl_ssh_user:{}, kubectl_ssh_port:{}'.format(self.kubectl_ip_address, self.kubectl_ssh_key_file, self.kubectl_ssh_user, self.kubectl_ssh_port)
+    

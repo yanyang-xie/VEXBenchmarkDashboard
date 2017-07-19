@@ -14,7 +14,8 @@ urlpatterns = [
     #url(r'^$', 'dashboard.views.home', name='home'),
     
     # settings --> globalSettings
-    url(r'^global_settings$', views.global_settings, name='global_settings'),
+    url(r'^settings/global$', views.global_settings, name='global_settings'),
+    url(r'^settings/kubernetes$', views.kubernetes_settings, name='kubernetes_settings'),
     
     # Basic Environment setting Home
     url(r'^env_setting$', op_views.env_setting, name='env_setting'),

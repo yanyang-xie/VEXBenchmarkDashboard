@@ -1,12 +1,13 @@
 # -*- coding:utf-8 -*-
 import logging
+import os
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response
 
-from dashboard.forms import VEXGolbalSettingsFrom
-from dashboard.models import VEXGolbalSettings
-from dashboard.utils import generate_user_context
+from dashboard.forms import VEXGolbalSettingsFrom, KubernetesSettingsFrom
+from dashboard.models import VEXGolbalSettings, \
+    KubernetesSettings, kube_file_folder
 
 
 logger = logging.getLogger(__name__)
@@ -56,6 +57,47 @@ def global_settings(request):
         
         context['form'] = form
         return render(request, 'dashboard/global_settings.html', context)
+
+
+@login_required 
+def kubernetes_settings(request):
+    #context = generate_user_context(request)
+    context = {}
+    if request.method == 'POST':
+        form = KubernetesSettingsFrom(request.POST, request.FILES)
+        if form.is_valid():
+            KubernetesSettings.objects.all().delete()
+            '''
+            key_file = request.FILES['kubectl_ssh_key_file']
+            
+            #store key file
+            from vbd.settings import MEDIA_ROOT
+            store_dir = MEDIA_ROOT + os.sep + kube_file_folder
+            filename = os.path.join(store_dir, key_file.name);
+            
+            if os.path.exists(filename): 
+                os.remove(filename)
+            
+            fobj = open(filename,'wb');
+            for chrunk in key_file.chunks():
+                fobj.write(chrunk);
+            fobj.close();
+            '''
+            
+            form.save()
+        context['form'] = form
+        return render(request, 'dashboard/kubernetes_settings.html', context)
+    else:
+        
+        settings = KubernetesSettings.objects.all()
+        if len(settings) > 0:
+            # 给form初始值, 两种方式
+            form = KubernetesSettingsFrom(instance = settings[0])
+        else:
+            form = KubernetesSettingsFrom(initial={'kubectl_ssh_user':'root', 'kubectl_ssh_port':22})    
+        
+        context['form'] = form
+        return render(request, 'dashboard/kubernetes_settings.html', context)
 
 
 

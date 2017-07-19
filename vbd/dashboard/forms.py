@@ -1,7 +1,8 @@
 from django import forms
 from django.forms.models import ModelForm
 
-from dashboard.models import VEXGolbalSettings
+from dashboard.models import VEXGolbalSettings, KubernetesSettings
+
 
 class VEXGolbalSettingsFrom(ModelForm):
     class Meta:
@@ -12,9 +13,6 @@ class VEXGolbalSettingsFrom(ModelForm):
                                                      error_messages={'max_length': u'Grafana http address is too long(<128)'})
     grafana_http_address = forms.CharField(max_length=128, help_text=u'Http address of Grafana dashboard',
                                            error_messages={'max_length': u'Grafana http address is too long(<128)'})
-    
-    #prometheus_http_address = forms.CharField(max_length=128, help_text=u'Http address of Prometheus',
-    #                                       error_messages={'max_length': u'Prometheus server address is too long(<128)'})
     
     use_default_version = forms.BooleanField(help_text=u'Uniform version in VEX deployment', required=False)
     
@@ -41,5 +39,23 @@ class VEXGolbalSettingsFrom(ModelForm):
             return False
         else:
             return True
+
+class KubernetesSettingsFrom(ModelForm):
+    class Meta:
+        model = KubernetesSettings
+        fields = '__all__'
+    
+    kubectl_ip_address = forms.GenericIPAddressField(max_length=128, help_text=u'Internal IP Address of Kubernete master',
+                                                     error_messages={'max_length': u'Grafana http address is too long(<128)'})
+    kubectl_ssh_key_file = forms.FileField(help_text=u'SSH key file of Kubernete master', error_messages={}, required=False, widget=forms.FileInput())
+    
+    kubectl_ssh_user = forms.CharField(max_length=128, help_text=u'SSH user Kubernete master',
+                                                     error_messages={'max_length': u'User is too long(<128)'})
+    
+    kubectl_ssh_port = forms.IntegerField(help_text=u'SSH port of Kubernete master',
+                                                     error_messages={'max_length': u'port is too long(<128)'})
+    
+    #def clean_kubectl_ssh_key_file(self):
+    #    return self.kubectl_ssh_key_file
         
     

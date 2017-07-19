@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Golbal Settings{% endblock %}
+
+{% block header %}
+<script>
+
+var tmp_kubectl_ip_address = "";
+var tmp_kubectl_ssh_key_file = "";
+var tmp_kubectl_ssh_user = "";
+var tmp_kubectl_ssh_port = "";
+
+$(function() {
+	{% if form.errors %}
+		$("#id_kubectl_ip_address").attr("disabled",false);
+		$("#id_kubectl_ssh_key_file").attr("disabled",false);
+		$("#id_kubectl_ssh_user").attr("disabled",false);
+		$("#id_kubectl_ssh_port").attr("disabled",false);
+	
+		$("#edit_button").hide();
+		$("#save_button").show();
+		$("#cancel_button").show();
+		
+		tmp_kubectl_ip_address = "{{ form.kubectl_ip_address.value }}";
+		tmp_kubectl_ssh_key_file = "{{ form.kubectl_ssh_key_file.value }}";
+		tmp_kubectl_ssh_user = "{{ form.kubectl_ssh_user.value }}";
+		tmp_kubectl_ssh_port = "{{ form.kubectl_ssh_port.value }}";
+	{% endif %}
+	
+	{% if form.kubectl_ssh_port.value %} 
+		$("#id_kubectl_ssh_port").attr("checked",true);
+	{% endif %}
+});
+
+function edit(){
+	$("#id_kubectl_ip_address").attr("disabled",false);
+	$("#id_kubectl_ssh_key_file").attr("disabled",false);
+	$("#id_kubectl_ssh_user").attr("disabled",false);
+	$("#id_kubectl_ssh_port").attr("disabled",false);
+	
+	tmp_kubectl_ip_address = $("#id_kubectl_ip_address").val();
+	tmp_kubectl_ssh_key_file = $("#id_kubectl_ssh_key_file").val();
+	tmp_kubectl_ssh_user = $("#id_kubectl_ssh_user").val();
+	tmp_kubectl_ssh_port = $("#id_kubectl_ssh_port").val();
+	
+	$("#edit_button").hide();
+	$("#save_button").show();
+	$("#cancel_button").show();
+}
+
+function cancel(){
+	$("#id_kubectl_ip_address").val(tmp_kubectl_ip_address);
+	$("#id_kubectl_ssh_key_file").val(tmp_kubectl_ssh_key_file);
+	$("#id_kubectl_ssh_user").val(tmp_kubectl_ssh_user);
+	
+	if (tmp_kubectl_ssh_port=="True"){
+		$("#id_kubectl_ssh_port").prop("checked", true);
+	}else{
+		$("#id_kubectl_ssh_port").prop("checked", false);
+	}
+	
+	$("#id_kubectl_ip_address").attr("disabled",true);
+	$("#id_kubectl_ssh_key_file").attr("disabled",true);
+	$("#id_kubectl_ssh_user").attr("disabled",true);
+	$("#id_kubectl_ssh_port").attr("disabled",true);
+	
+	$("#edit_button").show();
+	$("#save_button").hide();
+	$("#cancel_button").hide();
+}
+
+</script>
+{% endblock%}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Kubernetes Server Setting</h3></div>
+                <div class="panel-body">
+                    <form method="POST" class="form-horizontal" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_kubectl_ip_address_label" class="col-md-3 control-label">{{ form.kubectl_ip_address.label }}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="id_{{ form.kubectl_ip_address.name }}" name="{{ form.kubectl_ip_address.name }}" autofocus disabled value="{{ form.kubectl_ip_address.value }}">
+                                {% if form.errors.kubectl_ip_address %}
+                                	<div class="has-warning"><label class="control-label" for="inputWarning"> {{form.errors.kubectl_ip_address}} </label></div>
+                                {% else %}
+                                	<p class="help-block"> {{form.kubectl_ip_address.help_text}} </p>
+                                {% endif %}
+                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_kubectl_ssh_key_file_label" class="col-md-3 control-label">{{ form.kubectl_ssh_key_file.label }}</label>
+                            <div class="col-md-9">
+                            	<input id="id_{{ form.kubectl_ssh_key_file.name }}" name="{{ form.kubectl_ssh_key_file.name }}" autofocus disabled type="file" class="file" value="{{ form.kubectl_ssh_key_file.value }}>
+                                {% if form.errors.kubectl_ssh_key_file %}
+                                	<div class="has-warning"><label class="control-label" for="inputWarning">{{form.errors.kubectl_ssh_key_file}}</label></div>
+                                {% else %}
+                                	<p class="help-block"> {{form.kubectl_ssh_key_file.help_text}} </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_kubectl_ssh_user_label" class="col-md-3 control-label">{{ form.kubectl_ssh_user.label }}</label>
+                            <div class="col-md-9">
+                            	<input type="text" class="form-control" id="id_{{ form.kubectl_ssh_user.name }}" name="{{ form.kubectl_ssh_user.name }}" autofocus disabled value="{{ form.kubectl_ssh_user.value }}">
+                                {% if form.errors.kubectl_ssh_user %}
+                                	<div class="has-warning"><label class="control-label" for="inputWarning">{{form.errors.kubectl_ssh_user}}</label></div>
+                                {% else %}
+                                	<p class="help-block"> {{form.kubectl_ssh_user.help_text}} </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_kubectl_ssh_port_label" class="col-md-3 control-label">{{ form.kubectl_ssh_port.label }}</label>
+                            <div class="col-md-9">
+                            	<input class="form-control" 
+                            		id="id_{{ form.kubectl_ssh_port.name }}" name="{{ form.kubectl_ssh_port.name }}" value="{{ form.kubectl_ssh_port.value }}" 
+                            		autofocus disabled >
+                                {% if form.errors.kubectl_ssh_port %}
+                                	<div class="has-warning"><label class="control-label" for="inputWarning">{{form.errors.kubectl_ssh_port}}</label></div>
+                                {% else %}
+                                	<p class="help-block"> {{form.kubectl_ssh_port.help_text}} </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-5 col-md-offset-3">
+                            <button type="button" id="edit_button" class="btn btn-success" value="edit" onclick="edit()">Edit</button>
+                            <button type="submit" id="save_button" class="btn btn-success" value="save" style="display:none;">Save</button>
+                            <button type="button" id="cancel_button" class="btn btn-success" value="cancel" style="display:none;" onclick="cancel()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
