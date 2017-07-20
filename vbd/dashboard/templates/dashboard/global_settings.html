@@ -37,6 +37,11 @@ function edit(){
 	tmp_grafana_http_address = $("#id_grafana_http_address").val();
 	tmp_prometheus_http_address = $("#id_prometheus_http_address").val();
 	tmp_use_default_version = $("#id_use_default_version").val();
+	if ($("#id_use_default_version").attr('checked') == 'checked'){
+		tmp_use_default_version = 'true';
+	}else{
+		tmp_use_default_version = 'false';
+	}
 	
 	$("#edit_button").hide();
 	$("#save_button").show();
@@ -47,7 +52,7 @@ function cancel(){
 	$("#id_grafana_http_address").val(tmp_grafana_http_address);
 	$("#id_prometheus_http_address").val(tmp_prometheus_http_address);
 	
-	if (tmp_use_default_version=="True"){
+	if (tmp_use_default_version=="true"){
 		$("#id_use_default_version").prop("checked", true);
 	}else{
 		$("#id_use_default_version").prop("checked", false);
