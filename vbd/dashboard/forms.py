@@ -9,10 +9,10 @@ class VEXGolbalSettingsFrom(ModelForm):
         model = VEXGolbalSettings
         fields = '__all__'
     
-    grafana_http_address = forms.CharField(max_length=128, help_text=u'Http address of Grafana dashboard',
+    grafana_http_address = forms.CharField(max_length=128, help_text=u'Http address of Grafana dashboard. Must be public IP or DNS',
                                            error_messages={'max_length': u'Grafana http address is too long(<128)'})
     
-    prometheus_http_address = forms.CharField(max_length=128, help_text=u'Http address of prometheus dashboard',
+    prometheus_http_address = forms.CharField(max_length=128, help_text=u'Http address of prometheus dashboard. Should be AWS private IP or DNS for the scrapy rate',
                                                      error_messages={'max_length': u'Prometheus http address is too long(<128)'})
     
     use_default_version = forms.BooleanField(help_text=u'Uniform version in VEX deployment', required=False)
@@ -46,7 +46,7 @@ class KubernetesSettingsFrom(ModelForm):
         model = KubernetesSettings
         fields = '__all__'
     
-    kubectl_ip_address = forms.GenericIPAddressField(max_length=128, help_text=u'Internal IP Address of Kubernete master',
+    kubectl_ip_address = forms.GenericIPAddressField(max_length=128, help_text=u'Internal IP Address of Kubernete master. Must be AWS private IP or DNS',
                                                      error_messages={'max_length': u'Grafana http address is too long(<128)'})
     kubectl_ssh_key_file = forms.FileField(help_text=u'SSH key file of Kubernete master', error_messages={}, required=True, widget=forms.FileInput())
     
