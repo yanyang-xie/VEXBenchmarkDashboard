@@ -223,6 +223,13 @@ CACHES = {
     },
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'vbd-cache',
+    }
+}
+
 #注册用户敏感词过滤
 ADMIN_RESERVED = ['admin', 'login', 'logout', ]
 LAW_RESERVED = ['porn', 'sex', 'fuck', 'shit']

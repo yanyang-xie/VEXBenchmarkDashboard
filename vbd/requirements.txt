@@ -1,0 +1,14 @@
+Django==1.8
+django-smtp-ssl==1.0
+mysql-python==1.2.5
+django-admin-bootstrapped==2.5.7
+django-bootstrap3==7.1.0
+APScheduler==2.1.2
+django-crispy-forms==1.6.0
+django-simple-captcha==0.5.5
+Fabric==1.11.1
+python-dateutil==2.6.0
+requests==2.13.0
+uwsgi
+fabric
+
