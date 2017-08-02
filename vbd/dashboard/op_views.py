@@ -115,8 +115,9 @@ def execute_cmd(request):
             
             if status_flag is not None:
                 service_status_obj = obj.status
-                service_status_obj.status_flag = status_flag
-                service_status_obj.save()
+                if service_status_obj is not None:
+                    service_status_obj.status_flag = status_flag
+                    service_status_obj.save()
                 logger.debug('Save operation status for %s to %s' %(obj.name, status_flag))
         
         logger.info("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
