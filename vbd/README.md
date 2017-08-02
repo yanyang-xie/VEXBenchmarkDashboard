@@ -48,25 +48,39 @@ py-autoreload=3 #如果有文件更新，自动重启服务
 py-autoreload=3 #实现和django自带server一样更新文件自动重启功能
 
 3. 采用nginx转发
-static URL要配置成settings.STATIC_ROOT的目录
+static URL要配置成settings.STATIC_ROOT的目录. 项目的目录是/home/yanyang/VEXBenchmarkDashboard/vbd
 location /static {
-    alias /home/yanyang/PerfTestUI/src/static;
+    alias /home/yanyang/VEXBenchmarkDashboard/vbd/static;
+}
+
+Server{
+	root /home/yanyang/VEXBenchmarkDashboard/vbd;
+}
+
+location / {
+    autoindex on;
 }
 
 service nginx restart
 
+CentOS 7.2 使用Nginx的几个注意事项:
+a. 项目目录不能在/root下
+b. 项目目录及其子目录的权限必须是755. chmod 755 -R /home/yanyang/VEXBenchmarkDashboard/vbd
+c. autoindex on;
+否则会出现403 Forbidden的错误
+
 4. 采用supervisord增加自启动
 vi /etc/supervisord.conf
 [program:perftestui]
-directory=/home/yanyang/PerfTestUI
+directory=/home/yanyang/VEXBenchmarkDashboard/vbd
 user=root
-command=uwsgi --ini /home/yanyang/PerfTestUI/src/config/uwsgi.ini
+command=uwsgi --ini /home/yanyang/VEXBenchmarkDashboard/vbd/config/uwsgi.ini
 stopsignal=QUIT
-process_name=perftestui
+process_name=vbd
 numprocs=1
 autostart=true
 autorestart=true
-stdout_logfile=/var/log/perftestui.log
+stdout_logfile=/var/log/vbd.log
 redirect_stderr=true
 
 注意:supervisord默认管理的是非守护进程的程序，如果采用守护进程用supervisord启动的话，会出现backoff的错误或者exit too fast的错误。当需要采用supervisord进行守护程序的时候，在uwsgi配置文件或者参数中必须不能设置daemonize=/var/log/vextestui.log(此时的log文件使用的是setting.py中的log文件设置)
