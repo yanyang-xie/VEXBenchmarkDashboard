@@ -83,6 +83,7 @@ def execute_cmd(request):
         if command == "":
             raise Exception("Not found command['%s']" %(op_tag))
         
+        '''
         # for vex customization
         if op_tag == 'deploy':
             # 如果设置了使用全局统一的版本, 那么则取默认的版本, 否则使用单独设置的版本
@@ -95,6 +96,7 @@ def execute_cmd(request):
             else:
                 version = obj.deploy_version
             command += ' -v %s' %(version.version)
+        '''
         
         stdout, stderr, ex = _execute_command(command, obj.command_timeout, True, obj.is_kube_command)
         if stderr is not None and len(stderr) > 0:
