@@ -131,15 +131,15 @@
 			            
 			            <td class='text-left'>
 							{% if vex_operation.start_command %}
-								<button type="button" id="vex_btn_start_{{vex_operation.id}}" class="btn btn-success" {% if vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'true','', 'true')">&nbspStart&nbsp</button>
+								<button type="button" id="vex_btn_start_{{vex_operation.id}}" class="btn btn-success" {% if vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'vex_op','', 'true')">&nbspStart&nbsp</button>
 							{% endif %}
 							
 							{% if vex_operation.stop_command %}
-								<button type="button" id="vex_btn_stop_{{vex_operation.id}}" class="btn btn-primary" {% if not vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true','', 'true')">&nbspStop&nbsp</button>
+								<button type="button" id="vex_btn_stop_{{vex_operation.id}}" class="btn btn-primary" {% if not vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'vex_op','', 'true')">&nbspStop&nbsp</button>
 							{% endif%}
 							            
 							{% if vex_operation.deploy_command %}
-								<button type="button" id="vex_btn_deploy_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Deploying..." onclick="operation('deploy','{{vex_operation.id}}','btn_deploy_{{vex_operation.id}}', 'true','')">Deploy</button>
+								<button type="button" id="vex_btn_deploy_{{vex_operation.id}}" class="btn btn-info" /Users/xieyanyang/work/learning/VEXBenchmarkDashboard/vbd="Deploying..." onclick="operation('deploy','{{vex_operation.id}}','btn_deploy_{{vex_operation.id}}', 'vex_op','','false')">Deploy</button>
 							{% endif%}
 						</td>
 			        </tr>
@@ -196,10 +196,10 @@
 			            </td>
 			            <td class='text-left'>
 		                    {% if basic_operation.start_command %}
-			            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'false','', 'true')">Start</button>
+			            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'basic_op','', 'true')">Start</button>
 							{% endif %}
 							{% if basic_operation.stop_command %}
-								<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'false','', 'true')">Stop</button>
+								<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'basic_op','', 'true')">Stop</button>
 							{% endif%}
 			            </td>
 			        </tr>

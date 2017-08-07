@@ -287,10 +287,12 @@ def _generate_component_status_basic_dict(vex_op):
     return op_dict
 
 def _get_operation_command(op_id, op_tag, is_vex_operation):
-    if is_vex_operation == 'true':
+    if is_vex_operation == 'vex_op':
         obj = get_object_or_404(VEXOperation, pk=op_id)
-    else:
+    elif is_vex_operation == 'basic_op':
         obj = get_object_or_404(Operation, pk=op_id)
+    else:
+        obj = get_object_or_404(VEXPerfTestOperation, pk=op_id)
         
     command = ""
     if op_tag == "start" or op_tag == "run":
