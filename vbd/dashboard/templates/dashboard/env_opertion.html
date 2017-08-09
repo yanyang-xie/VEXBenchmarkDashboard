@@ -139,7 +139,7 @@
 							{% endif%}
 							            
 							{% if vex_operation.deploy_command %}
-								<button type="button" id="btn_deploy_{{vex_operation.id}}_vex" class="btn btn-info" /Users/xieyanyang/work/learning/VEXBenchmarkDashboard/vbd="Deploying..." onclick="operation('deploy','{{vex_operation.id}}','btn_deploy_{{vex_operation.id}}_vex', 'vex_op','','false')">Deploy</button>
+								<button type="button" id="btn_deploy_{{vex_operation.id}}_vex" class="btn btn-info" data-loading-text="Deploying..." onclick="operation('deploy','{{vex_operation.id}}','btn_deploy_{{vex_operation.id}}_vex', 'vex_op','','false')">Deploy</button>
 							{% endif%}
 						</td>
 			        </tr>
