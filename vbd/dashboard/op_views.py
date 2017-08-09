@@ -187,14 +187,14 @@ def _scrapy_component_status(status_obj, execute_time):
     if ex is not None:
         #logger.error(type(ex))
         logger.error("Scrapy error: cmd:%s, timestamp:%s, error:%s" %(status_command, execute_time, str(type(ex))[0:200]))
-        status_obj.status_response = str(ex)
+        status_obj.status_response = str(ex)[0:512]
         status_obj.status_flag=False
         status_obj.save()
         
     elif stderr is None or len(stderr) == 0:
         # get right status response
         logger.debug("Scrapy succeed: cmd:%s, timestamp:%s, message:%s" %(status_command, execute_time, stdout))
-        status_obj.status_response = stdout
+        status_obj.status_response = str(stdout)[0:512]
         status_obj.status_flag=True
         status_obj.save()
         
