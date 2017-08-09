@@ -131,15 +131,15 @@
 			            
 			            <td class='text-left'>
 							{% if vex_operation.start_command %}
-								<button type="button" id="btn_start_{{vex_operation.id}}_vex" class="btn btn-success" {% if vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}_vex', 'vex_op','', 'true')">&nbspStart&nbsp</button>
+								<button type="button" id="vex_btn_start_{{vex_operation.id}}" class="btn btn-success" {% if vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','vex_btn_start_{{vex_operation.id}}', 'vex_op','', 'true')">&nbspStart&nbsp</button>
 							{% endif %}
 							
 							{% if vex_operation.stop_command %}
-								<button type="button" id="btn_stop_{{vex_operation.id}}_vex" class="btn btn-primary" {% if not vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}_vex', 'vex_op','', 'true')">&nbspStop&nbsp</button>
+								<button type="button" id="vex_btn_stop_{{vex_operation.id}}" class="btn btn-primary" {% if not vex_operation.status.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','vex_btn_stop_{{vex_operation.id}}', 'vex_op','', 'true')">&nbspStop&nbsp</button>
 							{% endif%}
 							            
 							{% if vex_operation.deploy_command %}
-								<button type="button" id="btn_deploy_{{vex_operation.id}}_vex" class="btn btn-info" data-loading-text="Deploying..." onclick="operation('deploy','{{vex_operation.id}}','btn_deploy_{{vex_operation.id}}_vex', 'vex_op','','false')">Deploy</button>
+								<button type="button" id="vex_btn_deploy_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Deploying..." onclick="operation('deploy','{{vex_operation.id}}','vex_btn_deploy_{{vex_operation.id}}', 'vex_op','','false')">Deploy</button>
 							{% endif%}
 						</td>
 			        </tr>
