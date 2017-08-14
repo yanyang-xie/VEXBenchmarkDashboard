@@ -187,14 +187,14 @@ def _scrapy_component_status(status_obj, execute_time):
     if ex is not None:
         #logger.error(type(ex))
         logger.error("Scrapy error: cmd:%s, timestamp:%s, error:%s" %(status_command, execute_time, str(type(ex))[0:200]))
-        status_obj.status_response = str(ex)[0:512]
+        status_obj.status_response = str(ex)[0:2048]
         status_obj.status_flag=False
         status_obj.save()
         
     elif stderr is None or len(stderr) == 0:
         # get right status response
         logger.debug("Scrapy succeed: cmd:%s, timestamp:%s, message:%s" %(status_command, execute_time, stdout))
-        status_obj.status_response = str(stdout)[0:512]
+        status_obj.status_response = str(stdout)[0:2048]
         status_obj.status_flag=True
         status_obj.save()
         
@@ -207,8 +207,16 @@ def _scrapy_component_status(status_obj, execute_time):
         status_obj.save()
 
 def _pasre_vex_components(status_obj):
-    if VEXOperation.objects.filter(status=status_obj):
+    vop = VEXOperation.objects.get(status=status_obj)
+    if vop:
         logger.info("parse vex obj")
+        status_json = json.loads(status_obj.status_response)
+        version = status_json['AppVersion']
+        build_date = status_json['AppBuildDate']
+        vop.build_info = build_date
+        vop.running_version = version
+        vop.save()
+        logger.info("save vex status")
 
 def fetch_component_status(request):
     status_list = []

@@ -132,7 +132,7 @@ class ServiceStatus(models.Model):
     status_flag = models.BooleanField(choices=SERVICE_STATUS_FLAG, blank=False, null=False, default=SERVICE_STATUS_FLAG[-1][0])
     
     # store the response message from status CMD
-    status_response = models.CharField(max_length=1024, blank=True, null=True)
+    status_response = models.CharField(max_length=2048, blank=True, null=True)
     
     class Meta:
         db_table = 'service_status'
