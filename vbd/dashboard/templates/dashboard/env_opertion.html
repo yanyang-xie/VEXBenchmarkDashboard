@@ -81,9 +81,9 @@
 				<thead >
 				    <tr>
 				      <th class='text-center'>Component</th>
+				      <th class='text-center'>Running Version</th>
 				      <th class='text-center'>Build Info</th>
 				      <th class='text-center'>Status</th>
-				      <th class='text-center'>Running Version</th>
 				      <th class='text-center'>Deploy Version</th>
 				      <th class='text-center'>Action</th>
 				     </tr>
@@ -101,6 +101,11 @@
 			                {{ vex_operation.name }}
 			            </td>
 			            
+			           <td id="vex_op_running_version_{{vex_operation.id}}" class='text-center'>
+			            	{% if vex_operation.running_version %}
+			            		{{ vex_operation.running_version }}
+			            	 {% endif %}
+			            </td>
 			            <td id="vex_op_running_build_{{vex_operation.id}}" class='text-center'>
 			            	{% if vex_operation.build_info %}
 			                	<em class="text-info">{{vex_operation.build_info}}</em>
@@ -115,12 +120,6 @@
 					            	Stopped
 					            {% endifequal %}
 				            {% endif %}
-			            </td>
-			            
-			            <td id="vex_op_running_version_{{vex_operation.id}}" class='text-center'>
-			            	{% if vex_operation.running_version %}
-			            		{{ vex_operation.running_version }}
-			            	 {% endif %}
 			            </td>
 			            
 			            <td id="vex_op_deploy_version_{{vex_operation.id}}" class='text-center'>
