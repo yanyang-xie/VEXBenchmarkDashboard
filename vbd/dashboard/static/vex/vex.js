@@ -67,6 +67,8 @@ function operation(op_tag, op_id, btn_id, is_vex_operation, test_type, update_st
 	   						$("#op_status_" + op_id).html("Running");
 	   						$("#btn_start_" + op_id).hide();
 	   						$("#btn_stop_" + op_id).show();
+	   						$("#benchmark_btn_start_" + op_id).hide();
+	   						$("#benchmark_btn_stop_" + op_id).show();
 	   						
 	   						try{ 
 	   							$('#warm_up_minute_' + op_id).editable('disable');
@@ -78,6 +80,8 @@ function operation(op_tag, op_id, btn_id, is_vex_operation, test_type, update_st
 	   						$("#op_status_" + op_id).html("Stopped");
 	   						$("#btn_start_" + op_id).show();
 	   						$("#btn_stop_" + op_id).hide();
+	   						$("#benchmark_btn_start_" + op_id).show();
+	   						$("#benchmark_btn_stop_" + op_id).hide();
 	   						
 	   						try{ 
 	   							$('#warm_up_minute_' + op_id).editable('enable');
