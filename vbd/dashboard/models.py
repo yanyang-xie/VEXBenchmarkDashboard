@@ -3,7 +3,7 @@ from django.db import models
 from dashboard.utility.date_util import get_current_day_start_date
 
 # choices = ['value', 'display name']
-CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
+CHOICES_PROJECT = [('VEX-Kubernetes','VEX-Kubernetes'),]
 CHOICES_TYPE = [('VOD_T6', 'VOD_T6'), ('CDVR_T6', 'CDVR_T6'), ('LINEAR_T6', 'LINEAR_T6')]
 CHOICES_CONTENT_PREFIX = [('vod_test_', 'vod_test_'), ('t6_test_', 't6_test_'), ('cdvr_hot', 'cdvr_hot'), ('cdvr_fixed', 'cdvr_fixed'), ]
 
